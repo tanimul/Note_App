@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "NoteViewModel"
-    private val showAllNotes: LiveData<List<NoteModel>>
+    val showAllNotes: LiveData<List<NoteModel>>
     private val noteRepository: NoteRepository
 
     init {
@@ -21,7 +21,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         showAllNotes = noteRepository.showAllNotes
     }
 
-    fun insertWork(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
+    fun addSingleNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
         noteRepository.addSingleNote(note)
     }
 

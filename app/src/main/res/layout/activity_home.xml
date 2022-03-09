@@ -11,6 +11,17 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/layout_toolbar" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/sv_getYourImportantNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        app:iconifiedByDefault="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="@string/query_hint" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_noteList"
         android:layout_width="match_parent"
@@ -23,7 +34,7 @@
         tools:listitem="@layout/layout_note" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
+        android:id="@+id/fab_input"
         style="@style/Floating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

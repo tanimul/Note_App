@@ -3,10 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_grid.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_help.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_list.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_menu.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_settings.xml" value="0.19" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/icc_add.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_home.xml" value="0.25" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_input.xml" value="0.20208333333333334" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_note.xml" value="0.33" />
-        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_toolbar.xml" value="0.3875" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_toolbar.xml" value="0.16" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/menu/top_menu.xml" value="0.5" />
       </map>
     </option>
   </component>

@@ -12,7 +12,6 @@
         <activity
             android:name=".ui.InputActivity"
             android:exported="false"
-            android:label="@string/title_activity_input"
             android:theme="@style/Theme.NoteApp.NoActionBar" />
         <activity
             android:name=".ui.HomeActivity"

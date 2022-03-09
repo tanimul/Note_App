@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_listView"
+        android:icon="@drawable/ic_list"
+        android:title="@string/list_view" />
+    <item
+        android:id="@+id/menu_gridView"
+        android:icon="@drawable/ic_grid"
+        android:title="@string/grid_view" />
+    <item
+        android:id="@+id/menu_help"
+        android:icon="@drawable/ic_help"
+        android:title="@string/help" />
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings" />
+</menu>
