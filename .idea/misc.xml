@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_note.xml" value="0.25" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/icc_add.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_note.xml" value="0.33" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_toolbar.xml" value="0.3875" />
       </map>
     </option>
   </component>
