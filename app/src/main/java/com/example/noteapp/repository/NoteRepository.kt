@@ -6,8 +6,9 @@ import com.example.noteapp.interfaces.NoteDao
 import com.example.noteapp.model.NoteModel
 
 class NoteRepository(private val noteDao: NoteDao) {
+    private val TAG= "NoteRepository"
     var showAllNotes: LiveData<List<NoteModel>> = noteDao.showAllNotes()
-    private val TAG = "NoteRepository"
+
     suspend fun addSingleNote(noteModel: NoteModel) {
         noteDao.addSingleNote(noteModel)
         Log.d(TAG, "addSingleNote: ")

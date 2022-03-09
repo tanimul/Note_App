@@ -6,8 +6,8 @@ import com.example.noteapp.databinding.ActivityHomeBinding
 import com.example.noteapp.extentions.launchActivity
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityHomeBinding
     private val TAG = "HomeActivity"
+    private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
