@@ -3,7 +3,7 @@ package com.example.noteapp.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "note_table")
+@Entity(tableName = "Note")
 data class NoteModel(
     val NoteTitle: String,
     val noteDetails: String,
