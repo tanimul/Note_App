@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,7 +57,7 @@ class HomeActivity : AppBaseActivity() {
         //arrayList initialize
         noteList = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(noteList, formattedDate);
+        noteAdapter = NoteAdapter(noteList,noteList, formattedDate);
 
 
         //recyclerView
@@ -74,6 +75,19 @@ class HomeActivity : AppBaseActivity() {
             launchActivity<InputActivity>()
         }
 
+
+        binding.svGetYourImportantNote.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                Log.d(TAG, "onQueryTextChange: $newText")
+                noteAdapter.filter.filter(newText)
+                return false
+            }
+        })
     }
 
     @SuppressLint("RestrictedApi")
@@ -155,3 +169,4 @@ class HomeActivity : AppBaseActivity() {
 
 
 }
+

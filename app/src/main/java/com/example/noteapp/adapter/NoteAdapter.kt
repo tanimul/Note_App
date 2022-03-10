@@ -1,9 +1,12 @@
 package com.example.noteapp.adapter
 
-import android.content.Context
+import android.app.TaskInfo
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -11,8 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.model.NoteModel
 
-class NoteAdapter(private val lists: List<NoteModel>, private val formattedDate: String) :
-    RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+
+class NoteAdapter(
+    var lists: List<NoteModel>,
+    noteList: ArrayList<NoteModel>,
+    private val formattedDate: String
+) :
+    RecyclerView.Adapter<NoteAdapter.ViewHolder>(), Filterable {
+    private val TAG = "NoteAdapter"
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -63,6 +72,39 @@ class NoteAdapter(private val lists: List<NoteModel>, private val formattedDate:
         val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
         val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
         val cardview: CardView = ItemView.findViewById(R.id.cardView_note)
+    }
+
+    override fun getFilter(): Filter {
+        return quearyfilter
+    }
+
+    var quearyfilter: Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence): FilterResults {
+            val results = FilterResults()
+            if (constraint == null || constraint.isEmpty()) {
+                results.count = noteList.size
+                results.values = noteList
+            } else {
+                val searchStr = constraint.toString().uppercase()
+                val resultsData: MutableList<NoteModel> = ArrayList()
+                for (noteInfo in noteList) {
+                    if (noteInfo.noteTitle.uppercase()
+                            .contains(searchStr)
+                    ) resultsData.add(noteInfo)
+                }
+                results.count = resultsData.size
+                results.values = resultsData
+            }
+            Log.d(TAG, "result count: " + results.count)
+            Log.d(TAG, "result values: " + results.values)
+            return results
+        }
+
+        override fun publishResults(constraint: CharSequence, results: FilterResults) {
+            lists = results.values as ArrayList<NoteModel>
+            Log.d(TAG, "publishResults: " + lists.size)
+            notifyDataSetChanged()
+        }
     }
 
 }

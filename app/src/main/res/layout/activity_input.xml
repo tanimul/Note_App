@@ -42,7 +42,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:background="@drawable/simple_background_edit_text"
+        android:background="@drawable/spinner_background_edit_text"
         android:ems="10"
         android:fontFamily="sans-serif"
         android:gravity="center"
