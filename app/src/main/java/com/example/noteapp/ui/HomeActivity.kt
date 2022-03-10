@@ -143,9 +143,8 @@ class HomeActivity : AppBaseActivity() {
             }
 
             R.id.menu_delete -> {
-
-//        //delete Note
-//        noteViewModel.deleteAllNotes()
+                //delete Note
+                noteViewModel.deleteAllNotes()
             }
             R.id.menu_setting -> {
                 // dialog.show()

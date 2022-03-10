@@ -60,7 +60,7 @@ class InputActivity : AppBaseActivity() {
         )
         Log.d(TAG, "saveNote: $noteModel")
         noteViewModel.addSingleNote(noteModel)
-
+        onBackPressed()
     }
 
     private fun spinnerPriorityTypes() {
