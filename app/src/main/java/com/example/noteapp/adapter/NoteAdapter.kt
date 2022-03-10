@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.model.NoteModel
 
-class NoteAdapter(private val lists: List<NoteModel>) :
+class NoteAdapter(private val lists: List<NoteModel>, private val formattedDate: String) :
     RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -21,10 +21,8 @@ class NoteAdapter(private val lists: List<NoteModel>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = lists[position].NoteTitle
+        holder.title.text = lists[position].noteTitle
         holder.description.text = lists[position].noteDetails
-        holder.date.text = lists[position].noteTime
-
 
         when (lists[position].importance) {
             0 -> holder.cardview.setCardBackgroundColor(
@@ -47,6 +45,11 @@ class NoteAdapter(private val lists: List<NoteModel>) :
                     R.color.high_card_background
                 )
             )
+        }
+
+        when (lists[position].noteDate) {
+            formattedDate -> holder.date.text = lists[position].noteTime
+            else -> holder.date.text = lists[position].noteDate
         }
 
     }

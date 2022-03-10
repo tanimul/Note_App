@@ -16,6 +16,7 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="delete">Delete</string>
 
     <string-array name="priority_types">
         <item>Low</item>

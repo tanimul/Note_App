@@ -14,6 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="Floating" parent="Widget.Design.FloatingActionButton">
-        <item name="android:foreground">@drawable/ic_add</item>
+        <item name="android:foreground">@drawable/ic_addition</item>
     </style>
 </resources>

@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Note")
 data class NoteModel(
-    val NoteTitle: String,
+    val noteTitle: String,
     val noteDetails: String,
+    val noteDate: String,
     val noteTime: String,
     val importance: Int
 ) {
