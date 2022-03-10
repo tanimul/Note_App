@@ -20,10 +20,33 @@ interface NoteDao {
 
 
     @Query("DELETE FROM Note")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     suspend fun deleteAllNotes() //delete all notes
 
 
-    @Query("SELECT * FROM Note ORDER BY id ASC")
+    @Query("SELECT * FROM Note ORDER BY id DESC")
     fun showAllNotes(): LiveData<List<NoteModel>> //showing all notes
 
 
