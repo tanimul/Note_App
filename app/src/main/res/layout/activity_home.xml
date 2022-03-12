@@ -32,6 +32,19 @@
         app:spanCount="2"
         tools:listitem="@layout/layout_note" />
 
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Note! Create your first note."
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_input"
         style="@style/Floating"

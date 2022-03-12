@@ -55,13 +55,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[NoteViewModel::class.java]
 
-        if (isNoNote()) {
-            //Sett toolbar
-            setToolbarWithoutBackButton(binding.toolbarLayout.toolbar)
-            title = null
-        } else {
-            binding.toolbarLayout.toolbar.visibility = View.GONE
-        }
+        //Sett toolbar
+        setToolbarWithoutBackButton(binding.toolbarLayout.toolbar)
+        title = null
 
         //arrayList initialize
         noteList = ArrayList<NoteModel>()
@@ -74,10 +70,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         binding.rvNoteList.adapter = noteAdapter
 
-        if (isNoNote()) {
-            //showNotes
-            showNotes()
-        }
+        //showNotes
+        showNotes()
+
 
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
@@ -109,6 +104,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
+            isEmptyNote()
             Log.d(TAG, "Result Code: " + it.resultCode)
             if (it.resultCode != RESULT_CANCELED) {
                 val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
@@ -141,7 +137,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (isNoNote()) {
+        return if (isEmptyNote()) {
+            true
+        } else {
             val menuInflater = menuInflater
             menuInflater.inflate(R.menu.top_menu, menu)
             optionMenu = menu
@@ -149,9 +147,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                 menu.setOptionalIconsVisible(true)
             }
             optionMenu?.findItem(R.id.menu_gridView)?.isVisible = false
+            true
         }
 
-        return true
     }
 
     private fun showNotes() {
@@ -165,24 +163,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         }
     }
 
-    private fun isNoNote(): Boolean {
-        var noNote: Boolean = true
-        noteViewModel.showAllNotes.observe(
-            this
-        ) {
-            Log.d(TAG, " check size: " + it.size)
-            if (it.isEmpty()) {
-                binding.svGetYourImportantNote.visibility = View.GONE
-                noNote = false
-            } else {
-                noNote = true
-            }
-        }
-        return when (noNote) {
-            true -> true
-            false -> false
-        }
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -200,9 +180,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
             }
             R.id.menu_help -> {
-
-//        //delete Note
-//        noteViewModel.deleteAllNotes()
             }
 
             R.id.menu_delete -> {
@@ -283,6 +260,33 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                 );
             }
         }).attachToRecyclerView(binding.rvNoteList)
+    }
+
+    private fun isEmptyNote(): Boolean {
+        invalidateOptionsMenu()
+        var noNote: Boolean = true
+        noteViewModel.showAllNotes.observe(
+            this
+        ) {
+            Log.d(TAG, " check size: " + it.size)
+            if (it.isEmpty()) {
+                noNote = true
+                binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+                binding.svGetYourImportantNote.visibility =
+                    if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
+
+
+            } else {
+                noNote = false
+                binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+                binding.svGetYourImportantNote.visibility =
+                    if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
+            }
+        }
+        return when (noNote) {
+            true -> true
+            false -> false
+        }
     }
 }
 

@@ -69,6 +69,8 @@ class NoteAdapter(
             onNoteClickListener.onItemClick(lists[position])
         }
 
+
+
     }
 
     override fun getItemCount(): Int {

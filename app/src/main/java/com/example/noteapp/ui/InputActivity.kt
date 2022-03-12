@@ -2,23 +2,18 @@ package com.example.noteapp.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
-import android.text.Editable
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.databinding.ActivityInputBinding
+import com.example.noteapp.extentions.toast
 import com.example.noteapp.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
 import java.io.Serializable
-
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 
 class InputActivity : AppBaseActivity() {
     private val TAG = "InputActivity"
@@ -67,7 +62,10 @@ class InputActivity : AppBaseActivity() {
         )[NoteViewModel::class.java]
 
         binding.btSave.setOnClickListener {
+
             saveNote()
+
+
         }
 
         binding.ibDropdown.setOnClickListener {
@@ -76,34 +74,43 @@ class InputActivity : AppBaseActivity() {
     }
 
     private fun saveNote() {
-        val noteModel = NoteModel(
-            noteTitle = binding.etTitle.text.toString(),
-            noteDetails = binding.etDescription.text.toString(),
-            noteDate = formattedDate,
-            noteTime = formattedTime,
-            importance = binding.spinnerPriority.selectedItemPosition
-        )
-        // noteViewModel.addSingleNote(noteModel)
-        val resultIntent = Intent()
-
-        if (intent.extras != null) {
-            resultIntent.putExtra(
-                "noteModel", noteModel as Serializable
-            )
-            resultIntent.putExtra("existingNoteId", existingNoteModel.id)
-            setResult(
-                Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE, resultIntent
-            )
-            Log.d(TAG, "editNote: ")
-
+        if (binding.etTitle.text.toString().isEmpty() && binding.etDescription.text.toString()
+                .isEmpty()
+        ) {
+            toast("Not Saved")
         } else {
 
-            setResult(
-                Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
-                resultIntent.putExtra("noteModel", noteModel as Serializable)
+            val noteModel = NoteModel(
+                noteTitle = binding.etTitle.text.toString(),
+                noteDetails = binding.etDescription.text.toString(),
+                noteDate = formattedDate,
+                noteTime = formattedTime,
+                importance = binding.spinnerPriority.selectedItemPosition
             )
-            Log.d(TAG, "addNote: ")
+            // noteViewModel.addSingleNote(noteModel)
+            val resultIntent = Intent()
+
+            if (intent.extras != null) {
+                resultIntent.putExtra(
+                    "noteModel", noteModel as Serializable
+                )
+                resultIntent.putExtra("existingNoteId", existingNoteModel.id)
+                setResult(
+                    Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE, resultIntent
+                )
+                Log.d(TAG, "editNote: ")
+
+            } else {
+
+                setResult(
+                    Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
+                    resultIntent.putExtra("noteModel", noteModel as Serializable)
+                )
+                Log.d(TAG, "addNote: ")
+            }
+
         }
+
 
         finish()
     }
@@ -119,5 +126,9 @@ class InputActivity : AppBaseActivity() {
         binding.spinnerPriority.adapter = priorityAdapter
     }
 
+    override fun onBackPressed() {
+        saveNote()
+        super.onBackPressed()
+    }
 }
 
