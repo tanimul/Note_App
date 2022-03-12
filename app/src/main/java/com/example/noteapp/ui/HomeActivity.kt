@@ -1,27 +1,36 @@
 package com.example.noteapp.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
 import com.example.noteapp.databinding.ActivityHomeBinding
 import com.example.noteapp.extentions.launchActivity
+import com.example.noteapp.extentions.toast
+import com.example.noteapp.interfaces.OnNoteClickListener
 import com.example.noteapp.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class HomeActivity : AppBaseActivity() {
+class HomeActivity : AppBaseActivity(), OnNoteClickListener {
     private val TAG = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
     private lateinit var noteViewModel: NoteViewModel
@@ -57,7 +66,7 @@ class HomeActivity : AppBaseActivity() {
         //arrayList initialize
         noteList = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(noteList,noteList, formattedDate);
+        noteAdapter = NoteAdapter(noteList, noteList, formattedDate, this);
 
 
         //recyclerView
@@ -72,11 +81,14 @@ class HomeActivity : AppBaseActivity() {
 
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
-            launchActivity<InputActivity>()
+            // launchActivity<InputActivity>()
+            val intent = Intent(this, InputActivity::class.java)
+            noteActResult.launch(intent)
         }
 
 
-        binding.svGetYourImportantNote.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        binding.svGetYourImportantNote.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
@@ -89,6 +101,26 @@ class HomeActivity : AppBaseActivity() {
             }
         })
     }
+
+    private val noteActResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
+                Log.d(TAG, "ok: " + it.data?.getSerializableExtra("noteModel"))
+                if (it.data != null) {
+                    noteViewModel.addSingleNote(it.data?.getSerializableExtra("noteModel") as NoteModel)
+                }
+
+            } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
+                Log.d(TAG, "ok: " + it.data?.getSerializableExtra("noteModel"))
+                if (it.data != null) {
+                    noteViewModel.updateExistingNote(it.data?.getSerializableExtra("noteModel") as NoteModel)
+                }
+
+            }
+        }
+
 
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -165,6 +197,15 @@ class HomeActivity : AppBaseActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onItemClick(noteModel: NoteModel) {
+        Log.d(TAG, "onItemClick: $noteModel")
+
+        startActivity(
+            Intent(this,InputActivity::class.java).putExtra("noteModel", noteModel as Serializable)
+        )
+
     }
 
 

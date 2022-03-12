@@ -12,16 +12,20 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
+import com.example.noteapp.interfaces.OnNoteClickListener
 import com.example.noteapp.model.NoteModel
+import com.example.noteapp.ui.HomeActivity
 
 
 class NoteAdapter(
     var lists: List<NoteModel>,
     noteList: ArrayList<NoteModel>,
-    private val formattedDate: String
+    private val formattedDate: String,
+    onNoteClickListener: OnNoteClickListener
 ) :
     RecyclerView.Adapter<NoteAdapter.ViewHolder>(), Filterable {
     private val TAG = "NoteAdapter"
+    private val onNoteClickListener: OnNoteClickListener = onNoteClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -34,23 +38,23 @@ class NoteAdapter(
         holder.description.text = lists[position].noteDetails
 
         when (lists[position].importance) {
-            0 -> holder.cardview.setCardBackgroundColor(
+            0 -> holder.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
-                    holder.cardview.context,
+                    holder.cardView.context,
                     R.color.low_card_background
                 )
             )
 
-            1 -> holder.cardview.setCardBackgroundColor(
+            1 -> holder.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
-                    holder.cardview.context,
+                    holder.cardView.context,
                     R.color.medium_card_background
                 )
             )
 
-            2 -> holder.cardview.setCardBackgroundColor(
+            2 -> holder.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
-                    holder.cardview.context,
+                    holder.cardView.context,
                     R.color.high_card_background
                 )
             )
@@ -59,6 +63,10 @@ class NoteAdapter(
         when (lists[position].noteDate) {
             formattedDate -> holder.date.text = lists[position].noteTime
             else -> holder.date.text = lists[position].noteDate
+        }
+
+        holder.itemView.setOnClickListener {
+            onNoteClickListener.onItemClick(lists[position])
         }
 
     }
@@ -71,7 +79,8 @@ class NoteAdapter(
         val title: TextView = ItemView.findViewById(R.id.tv_noteTitle)
         val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
         val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
-        val cardview: CardView = ItemView.findViewById(R.id.cardView_note)
+        val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
+
     }
 
     override fun getFilter(): Filter {

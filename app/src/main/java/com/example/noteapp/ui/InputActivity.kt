@@ -1,16 +1,21 @@
 package com.example.noteapp.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
+import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.databinding.ActivityInputBinding
 import com.example.noteapp.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
+import java.io.Serializable
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 class InputActivity : AppBaseActivity() {
     private val TAG = "InputActivity"
@@ -18,13 +23,29 @@ class InputActivity : AppBaseActivity() {
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var formattedDate: String
     private lateinit var formattedTime: String
+    private lateinit var noteModel: NoteModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInputBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setToolbar(binding.toolbarLayout.toolbar)
-        title = getText(R.string.add_note).toString()
+        title = if (intent.extras != null) {
+            getText(R.string.update_note).toString()
+        } else {
+            getText(R.string.add_note).toString()
+        }
+
+        //Spinner
+        spinnerPriorityTypes()
+
+        noteModel = intent.extras?.getSerializable("noteModel") as NoteModel
+        if (noteModel != null) {
+            Log.d(TAG, "onCreate: $noteModel")
+            binding.etTitle.hint = noteModel.noteTitle
+            binding.etDescription.hint = noteModel.noteTitle
+            binding.spinnerPriority.setSelection(noteModel.importance);
+        }
 
         //get current date and time
         formattedDate =
@@ -41,9 +62,6 @@ class InputActivity : AppBaseActivity() {
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[NoteViewModel::class.java]
 
-        //Spinner
-        spinnerPriorityTypes()
-
         binding.btSave.setOnClickListener {
             saveNote()
         }
@@ -59,9 +77,14 @@ class InputActivity : AppBaseActivity() {
             importance = binding.spinnerPriority.selectedItemPosition
         )
         Log.d(TAG, "saveNote: $noteModel")
-        noteViewModel.addSingleNote(noteModel)
-        onBackPressed()
+        // noteViewModel.addSingleNote(noteModel)
+        setResult(
+            Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
+            Intent().putExtra("noteModel", noteModel as Serializable)
+        )
+        finish()
     }
+
 
     private fun spinnerPriorityTypes() {
         val priorityAdapter = ArrayAdapter(
@@ -74,3 +97,4 @@ class InputActivity : AppBaseActivity() {
     }
 
 }
+
