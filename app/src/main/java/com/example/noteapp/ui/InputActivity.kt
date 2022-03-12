@@ -23,7 +23,7 @@ class InputActivity : AppBaseActivity() {
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var formattedDate: String
     private lateinit var formattedTime: String
-    private lateinit var noteModel: NoteModel
+    private lateinit var existingNoteModel: NoteModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInputBinding.inflate(layoutInflater)
@@ -39,12 +39,13 @@ class InputActivity : AppBaseActivity() {
         //Spinner
         spinnerPriorityTypes()
 
-        noteModel = intent.extras?.getSerializable("noteModel") as NoteModel
-        if (noteModel != null) {
-            Log.d(TAG, "onCreate: $noteModel")
-            binding.etTitle.hint = noteModel.noteTitle
-            binding.etDescription.hint = noteModel.noteTitle
-            binding.spinnerPriority.setSelection(noteModel.importance);
+
+        if (intent.extras != null) {
+            existingNoteModel = intent.extras?.getSerializable("noteModel") as NoteModel
+            Log.d(TAG, "onCreate: $existingNoteModel")
+            binding.etTitle.hint = existingNoteModel.noteTitle
+            binding.etDescription.hint = existingNoteModel.noteTitle
+            binding.spinnerPriority.setSelection(existingNoteModel.importance);
         }
 
         //get current date and time
@@ -76,12 +77,28 @@ class InputActivity : AppBaseActivity() {
             noteTime = formattedTime,
             importance = binding.spinnerPriority.selectedItemPosition
         )
-        Log.d(TAG, "saveNote: $noteModel")
         // noteViewModel.addSingleNote(noteModel)
-        setResult(
-            Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
-            Intent().putExtra("noteModel", noteModel as Serializable)
-        )
+        val resultIntent = Intent()
+
+        if (intent.extras != null) {
+            resultIntent.putExtra(
+                "noteModel", noteModel as Serializable
+            )
+            resultIntent.putExtra("existingNoteId",existingNoteModel.id)
+            setResult(
+                Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE, resultIntent
+            )
+            Log.d(TAG, "editNote: ")
+
+        } else {
+
+            setResult(
+                Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
+                resultIntent.putExtra("noteModel", noteModel as Serializable)
+            )
+            Log.d(TAG, "addNote: ")
+        }
+
         finish()
     }
 

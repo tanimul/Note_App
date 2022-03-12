@@ -106,16 +106,27 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
+            Log.d(TAG, "Result Code: " + it.resultCode)
+            val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
             if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
-                Log.d(TAG, "ok: " + it.data?.getSerializableExtra("noteModel"))
+                Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
                 if (it.data != null) {
-                    noteViewModel.addSingleNote(it.data?.getSerializableExtra("noteModel") as NoteModel)
+                    noteViewModel.addSingleNote(noteModel)
                 }
 
             } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
-                Log.d(TAG, "ok: " + it.data?.getSerializableExtra("noteModel"))
+                Log.d(
+                    TAG,
+                    "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
+                        "existingNoteId", -1
+                    )
+                )
                 if (it.data != null) {
-                    noteViewModel.updateExistingNote(it.data?.getSerializableExtra("noteModel") as NoteModel)
+                    val id = it.data?.getIntExtra("existingNoteId", -1)
+                    if (id != null) {
+                        noteModel.id = id
+                    }
+                    noteViewModel.updateExistingNote(noteModel)
                 }
 
             }
@@ -153,7 +164,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         noteViewModel.showAllNotes.observe(
             this
         ) {
-            Log.d(TAG, "NoNote check size: " + it.size)
+            Log.d(TAG, " check size: " + it.size)
             if (it.isEmpty()) {
                 binding.svGetYourImportantNote.visibility = View.GONE
                 noNote = false
@@ -200,12 +211,13 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
     }
 
     override fun onItemClick(noteModel: NoteModel) {
-        Log.d(TAG, "onItemClick: $noteModel")
-
-        startActivity(
-            Intent(this,InputActivity::class.java).putExtra("noteModel", noteModel as Serializable)
+        Log.d(TAG, "onItemClick: $noteModel and id is: " + noteModel.id)
+        noteActResult.launch(
+            Intent(this, InputActivity::class.java).putExtra(
+                "noteModel",
+                noteModel as Serializable
+            )
         )
-
     }
 
 
