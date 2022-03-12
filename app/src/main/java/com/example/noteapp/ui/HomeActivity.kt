@@ -1,30 +1,30 @@
 package com.example.noteapp.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
 import com.example.noteapp.databinding.ActivityHomeBinding
-import com.example.noteapp.extentions.launchActivity
-import com.example.noteapp.extentions.toast
 import com.example.noteapp.interfaces.OnNoteClickListener
 import com.example.noteapp.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -100,6 +100,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                 return false
             }
         })
+
+
+        deleteForSwipe()
     }
 
     private val noteActResult =
@@ -107,29 +110,32 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             ActivityResultContracts.StartActivityForResult()
         ) {
             Log.d(TAG, "Result Code: " + it.resultCode)
-            val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
-            if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
-                Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
-                if (it.data != null) {
-                    noteViewModel.addSingleNote(noteModel)
-                }
-
-            } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
-                Log.d(
-                    TAG,
-                    "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
-                        "existingNoteId", -1
-                    )
-                )
-                if (it.data != null) {
-                    val id = it.data?.getIntExtra("existingNoteId", -1)
-                    if (id != null) {
-                        noteModel.id = id
+            if (it.resultCode != RESULT_CANCELED) {
+                val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
+                if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
+                    Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
+                    if (it.data != null) {
+                        noteViewModel.addSingleNote(noteModel)
                     }
-                    noteViewModel.updateExistingNote(noteModel)
-                }
 
+                } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
+                    Log.d(
+                        TAG,
+                        "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
+                            "existingNoteId", -1
+                        )
+                    )
+                    if (it.data != null) {
+                        val id = it.data?.getIntExtra("existingNoteId", -1)
+                        if (id != null) {
+                            noteModel.id = id
+                        }
+                        noteViewModel.updateExistingNote(noteModel)
+                    }
+
+                }
             }
+
         }
 
 
@@ -220,6 +226,63 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         )
     }
 
+    //Delete by left to right swipe
+    private fun deleteForSwipe() {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                noteViewModel.deleteSingleNote(noteList[viewHolder.adapterPosition])
+                noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addBackgroundColor(
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.colorBackground
+                        )
+                    )
+                    .addActionIcon(R.drawable.ic_delete_red)
+                    .create()
+                    .decorate()
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                );
+            }
+        }).attachToRecyclerView(binding.rvNoteList)
+    }
 }
 

@@ -17,6 +17,7 @@
     <string name="medium">Medium</string>
     <string name="low">Low</string>
     <string name="delete">Delete</string>
+    <string name="delete_all">Delete All</string>
 
     <string-array name="priority_types">
         <item>Low</item>

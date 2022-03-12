@@ -3,8 +3,11 @@ package com.example.noteapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.Constants
 import com.example.noteapp.R
@@ -43,8 +46,8 @@ class InputActivity : AppBaseActivity() {
         if (intent.extras != null) {
             existingNoteModel = intent.extras?.getSerializable("noteModel") as NoteModel
             Log.d(TAG, "onCreate: $existingNoteModel")
-            binding.etTitle.hint = existingNoteModel.noteTitle
-            binding.etDescription.hint = existingNoteModel.noteTitle
+            binding.etTitle.setText(existingNoteModel.noteTitle)
+            binding.etDescription.setText(existingNoteModel.noteTitle)
             binding.spinnerPriority.setSelection(existingNoteModel.importance);
         }
 
@@ -67,6 +70,9 @@ class InputActivity : AppBaseActivity() {
             saveNote()
         }
 
+        binding.ibDropdown.setOnClickListener {
+            binding.spinnerPriority.performClick()
+        }
     }
 
     private fun saveNote() {
@@ -84,7 +90,7 @@ class InputActivity : AppBaseActivity() {
             resultIntent.putExtra(
                 "noteModel", noteModel as Serializable
             )
-            resultIntent.putExtra("existingNoteId",existingNoteModel.id)
+            resultIntent.putExtra("existingNoteId", existingNoteModel.id)
             setResult(
                 Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE, resultIntent
             )
