@@ -7,11 +7,11 @@ import com.example.noteapp.model.NoteModel
 @Dao
 interface NoteDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addSingleNote(noteModel: NoteModel) //Add single note
 
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateExistingNote(noteModel: NoteModel) //update single note
 
 

@@ -1,6 +1,5 @@
 package com.example.noteapp.adapter
 
-import android.app.TaskInfo
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.interfaces.OnNoteClickListener
 import com.example.noteapp.model.NoteModel
-import com.example.noteapp.ui.HomeActivity
 
 
 class NoteAdapter(
@@ -66,9 +64,9 @@ class NoteAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            onNoteClickListener.onItemClick(lists[position])
+            Log.d(TAG, "onBindViewHolder: " + lists[holder.absoluteAdapterPosition])
+            onNoteClickListener.onItemClick(lists[holder.absoluteAdapterPosition])
         }
-
 
 
     }
@@ -82,6 +80,7 @@ class NoteAdapter(
         val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
         val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
         val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
+
 
     }
 

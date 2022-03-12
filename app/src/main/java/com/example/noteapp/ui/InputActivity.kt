@@ -42,7 +42,7 @@ class InputActivity : AppBaseActivity() {
             existingNoteModel = intent.extras?.getSerializable("noteModel") as NoteModel
             Log.d(TAG, "onCreate: $existingNoteModel")
             binding.etTitle.setText(existingNoteModel.noteTitle)
-            binding.etDescription.setText(existingNoteModel.noteTitle)
+            binding.etDescription.setText(existingNoteModel.noteDetails)
             binding.spinnerPriority.setSelection(existingNoteModel.importance);
         }
 

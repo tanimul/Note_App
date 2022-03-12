@@ -106,6 +106,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         ) {
             isEmptyNote()
             Log.d(TAG, "Result Code: " + it.resultCode)
+            Log.d(TAG, "Result Data: " + it.data?.getSerializableExtra("noteModel") as NoteModel)
             if (it.resultCode != RESULT_CANCELED) {
                 val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
                 if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
@@ -156,7 +157,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         noteViewModel.showAllNotes.observe(
             this
         ) {
-            Log.d(TAG, "showNotes: " + it.size)
             noteList.clear()
             noteList.addAll(it)
             noteAdapter.notifyDataSetChanged()
@@ -268,7 +268,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         noteViewModel.showAllNotes.observe(
             this
         ) {
-            Log.d(TAG, " check size: " + it.size)
             if (it.isEmpty()) {
                 noNote = true
                 binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE

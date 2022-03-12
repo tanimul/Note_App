@@ -20,7 +20,8 @@ class NoteRepository(private val noteDao: NoteDao) {
     }
 
     suspend fun updateExistingNote(noteModel: NoteModel) {
-        noteDao.updateExistingNote(noteModel)
+        noteDao.
+        updateExistingNote(noteModel)
         Log.d(TAG, "updateExistingNote: ")
     }
 
