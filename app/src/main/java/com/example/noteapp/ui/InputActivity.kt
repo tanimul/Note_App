@@ -18,18 +18,21 @@ class InputActivity : AppBaseActivity() {
     private val TAG = "InputActivity"
     private lateinit var binding: ActivityInputBinding
     private lateinit var noteViewModel: NoteViewModel
-    private lateinit var formattedDate: String
-    private lateinit var formattedTime: String
     private lateinit var existingNoteModel: NoteModel
+    private var createdAt: Long = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInputBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvNoteTitle.text = if (intent.extras != null) {
-            getText(R.string.update_note).toString()
+        if (intent.extras != null) {
+            binding.tvNoteTitle.text = getText(R.string.update_note).toString()
         } else {
-            getText(R.string.add_note).toString()
+            createdAt = System.currentTimeMillis()
+            binding.tvNoteTitle.text = getText(R.string.add_note).toString()
+            binding.tvDateTime.text =
+                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(Date())
         }
 
         if (intent.extras != null) {
@@ -37,26 +40,17 @@ class InputActivity : AppBaseActivity() {
             Log.d(TAG, "onCreate: $existingNoteModel")
             binding.etTitle.setText(existingNoteModel.noteTitle)
             binding.etDescription.setText(existingNoteModel.noteDetails)
+            createdAt = existingNoteModel.addedAt
+            binding.tvDateTime.text =
+                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
+                    existingNoteModel.addedAt
+                )
         }
-
-        //get current date and time
-        formattedDate =
-            SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(Date())
-        Log.d(TAG, "onCreate: $formattedDate")
-
-        formattedTime =
-            SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-        Log.d(TAG, "onCreate: $formattedTime")
 
         //note viewModel initialize
         noteViewModel = ViewModelProvider(
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[NoteViewModel::class.java]
-
-        binding.tvDateTime.text =
-            SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
-                Date()
-            )
 
         binding.ivSaveNote.setOnClickListener {
             saveNote()
@@ -77,8 +71,8 @@ class InputActivity : AppBaseActivity() {
             val noteModel = NoteModel(
                 noteTitle = binding.etTitle.text.toString(),
                 noteDetails = binding.etDescription.text.toString(),
-                noteDate = formattedDate,
-                noteTime = formattedTime,
+                addedAt = createdAt,
+                updatedAt = System.currentTimeMillis(),
                 importance = 1
             )
             // noteViewModel.addSingleNote(noteModel)

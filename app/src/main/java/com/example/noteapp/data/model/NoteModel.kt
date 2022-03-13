@@ -8,10 +8,10 @@ import java.io.Serializable
 data class NoteModel(
     val noteTitle: String,
     val noteDetails: String,
-    val noteDate: String,
-    val noteTime: String,
+    val addedAt: Long,
+    val updatedAt: Long,
     val importance: Int
-):Serializable {
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }

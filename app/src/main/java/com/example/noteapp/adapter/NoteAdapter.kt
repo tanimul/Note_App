@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.data.listner.OnNoteClickListener
 import com.example.noteapp.data.model.NoteModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class NoteAdapter(
@@ -37,27 +39,25 @@ class NoteAdapter(
             0 -> holder.viewImportance.setBackgroundResource(R.color.low_card_background)
             1 -> holder.viewImportance.setBackgroundResource(R.color.medium_card_background)
             2 -> holder.viewImportance.setBackgroundResource(R.color.high_card_background)
-
-
-//                holder.cardView.setCardBackgroundColor(
-//                ContextCompat.getColor(
-//                    holder.cardView.context,
-//                    R.color.low_card_background
-//                )
-//            )
         }
 
-        when (lists[position].noteDate) {
-            formattedDate -> holder.date.text = lists[position].noteTime
+        when (SimpleDateFormat(
+            "MMMM dd, yyyy",
+            Locale.getDefault()
+        ).format(lists[position].updatedAt)) {
+            formattedDate -> holder.date.text =
+                SimpleDateFormat("hh:mm a", Locale.getDefault()).format(lists[position].updatedAt)
             else ->
-                holder.date.text = lists[position].noteDate
+                holder.date.text = SimpleDateFormat(
+                    "MMMM dd, yyyy",
+                    Locale.getDefault()
+                ).format(lists[position].updatedAt)
         }
 
         holder.itemView.setOnClickListener {
             Log.d(TAG, "onBindViewHolder: " + lists[holder.absoluteAdapterPosition])
             onNoteClickListener.onItemClick(lists[holder.absoluteAdapterPosition])
         }
-
 
     }
 
