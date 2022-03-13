@@ -10,10 +10,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,8 +24,8 @@ import com.example.noteapp.adapter.NoteAdapter
 import com.example.noteapp.data.listner.OnNoteClickListener
 import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.databinding.ActivityHomeBinding
-import com.example.noteapp.extentions.toast
-import com.example.noteapp.utils.Constants
+import com.example.noteapp.utils.Constants.REQUEST_CODE_ADD_NOTE
+import com.example.noteapp.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import com.example.noteapp.viewmodel.NoteViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable
@@ -106,14 +106,14 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             Log.d(TAG, "Result Code: " + it.resultCode)
             if (it.resultCode != RESULT_CANCELED) {
                 val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
-                if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
+                if (it.resultCode == REQUEST_CODE_ADD_NOTE) {
                     Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
                     if (it.data != null) {
                         noteViewModel.addSingleNote(noteModel)
                         //toast("Note Saved")
                     }
 
-                } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
+                } else if (it.resultCode == REQUEST_CODE_EDIT_NOTE) {
                     Log.d(
                         TAG,
                         "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
@@ -198,10 +198,10 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             .setMessage("Are you sure you want to delete Tasks?")
             .setPositiveButton(
                 "OK"
-            ) { paramDialogInterface, paramInt -> noteViewModel.deleteAllNotes() }
+            ) { _, _ -> noteViewModel.deleteAllNotes() }
             .setNegativeButton(
                 "CANCEL"
-            ) { dialog, which -> dialog.dismiss() }
+            ) { dialog, _ -> dialog.dismiss() }
             .show()
 
     }
@@ -277,28 +277,15 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
     private fun isEmptyNote(): Boolean {
         invalidateOptionsMenu()
-        var noNote: Boolean = true
+        var noNote = true
         noteViewModel.showAllNotes.observe(
             this
         ) {
-            if (it.isEmpty()) {
-                noNote = true
-                binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.etSearch.visibility =
-                    if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
-
-
-            } else {
-                noNote = false
-                binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.etSearch.visibility =
-                    if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
-            }
+            binding.emptyLayout.root.isVisible = it.isEmpty()
+            binding.etSearch.isVisible = it.isNotEmpty()
+            noNote = it.isEmpty()
         }
-        return when (noNote) {
-            true -> true
-            false -> false
-        }
+        return noNote
     }
 }
 

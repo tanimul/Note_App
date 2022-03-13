@@ -20,11 +20,10 @@ class NoteAdapter(
     var lists: List<NoteModel>,
     noteList: ArrayList<NoteModel>,
     private val formattedDate: String,
-    onNoteClickListener: OnNoteClickListener
+    private val onNoteClickListener: OnNoteClickListener
 ) :
     RecyclerView.Adapter<NoteAdapter.ViewHolder>(), Filterable {
     private val TAG = "NoteAdapter"
-    private val onNoteClickListener: OnNoteClickListener = onNoteClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -83,10 +82,10 @@ class NoteAdapter(
         return quearyfilter
     }
 
-    var quearyfilter: Filter = object : Filter() {
+    private var quearyfilter: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): FilterResults {
             val results = FilterResults()
-            if (constraint == null || constraint.isEmpty()) {
+            if (constraint.isEmpty()) {
                 results.count = noteList.size
                 results.values = noteList
             } else {
