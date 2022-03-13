@@ -1,6 +1,7 @@
 package com.example.noteapp.ui
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
@@ -188,13 +189,27 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
             R.id.menu_delete -> {
                 //delete Note
-                noteViewModel.deleteAllNotes()
+                deleteAll()
             }
-            R.id.menu_setting -> {
-                // dialog.show()
-            }
+//            R.id.menu_setting -> {
+//                // dialog.show()
+//            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteAll() {
+        AlertDialog.Builder(this@HomeActivity)
+            .setTitle("Delete All")
+            .setMessage("Are you sure you want to delete Tasks?")
+            .setPositiveButton(
+                "OK"
+            ) { paramDialogInterface, paramInt -> noteViewModel.deleteAllNotes() }
+            .setNegativeButton(
+                "CANCEL"
+            ) { dialog, which -> dialog.dismiss() }
+            .show()
+
     }
 
     override fun onItemClick(noteModel: NoteModel) {

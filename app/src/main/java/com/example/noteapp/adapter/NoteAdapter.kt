@@ -60,7 +60,8 @@ class NoteAdapter(
 
         when (lists[position].noteDate) {
             formattedDate -> holder.date.text = lists[position].noteTime
-            else -> holder.date.text = lists[position].noteDate
+            else ->
+                holder.date.text = lists[position].noteDate
         }
 
         holder.itemView.setOnClickListener {
