@@ -106,7 +106,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         ) {
             isEmptyNote()
             Log.d(TAG, "Result Code: " + it.resultCode)
-            Log.d(TAG, "Result Data: " + it.data?.getSerializableExtra("noteModel") as NoteModel)
             if (it.resultCode != RESULT_CANCELED) {
                 val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
                 if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_ADD_NOTE) {
@@ -138,19 +137,24 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return if (isEmptyNote()) {
-            true
-        } else {
+        if (!isEmptyNote()) {
             val menuInflater = menuInflater
             menuInflater.inflate(R.menu.top_menu, menu)
             optionMenu = menu
             if (menu is MenuBuilder) {
                 menu.setOptionalIconsVisible(true)
             }
-            optionMenu?.findItem(R.id.menu_gridView)?.isVisible = false
-            true
+
+            optionMenu?.findItem(R.id.menu_gridView)?.isVisible =
+                binding.rvNoteList.layoutManager is LinearLayoutManager
+            optionMenu?.findItem(R.id.menu_listView)?.isVisible =
+                binding.rvNoteList.layoutManager is StaggeredGridLayoutManager
+
+            Log.d(TAG, "onCreateOptionsMenu: " + binding.rvNoteList.layoutManager)
+
         }
 
+        return true
     }
 
     private fun showNotes() {
@@ -165,19 +169,19 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "onOptionsItemSelected: " + item.itemId)
         when (item.itemId) {
-
             R.id.menu_listView -> {
                 binding.rvNoteList.layoutManager = LinearLayoutManager(this)
-                item.isVisible = false
-                optionMenu?.findItem(R.id.menu_gridView)?.isVisible = true
+                // item.isVisible = false
+                //  optionMenu?.findItem(R.id.menu_gridView)?.isVisible = true
             }
             R.id.menu_gridView -> {
                 binding.rvNoteList.layoutManager =
                     StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-                item.isVisible = false
-                optionMenu?.findItem(R.id.menu_listView)?.isVisible = true
+                // item.isVisible = false
 
+                // optionMenu?.findItem(R.id.menu_listView)?.isVisible = true
             }
             R.id.menu_help -> {
             }
