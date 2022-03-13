@@ -5,11 +5,12 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
@@ -22,6 +23,7 @@ import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
 import com.example.noteapp.databinding.ActivityHomeBinding
+import com.example.noteapp.extentions.toast
 import com.example.noteapp.interfaces.OnNoteClickListener
 import com.example.noteapp.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
@@ -83,17 +85,23 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         }
 
 
-        binding.svGetYourImportantNote.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
+        binding.etGetYourImportantNote.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                Log.d(TAG, "onQueryTextChange: $s")
+                noteAdapter.filter.filter(s)
             }
 
-            override fun onQueryTextChange(newText: String): Boolean {
-                Log.d(TAG, "onQueryTextChange: $newText")
-                noteAdapter.filter.filter(newText)
-                return false
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+                // TODO Auto-generated method stub
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+                // filter your list from your input
+
+                //you can use runnable postDelayed like 500 ms to delay search text
             }
         })
 
@@ -113,6 +121,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                     Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
                     if (it.data != null) {
                         noteViewModel.addSingleNote(noteModel)
+                        toast("Note Saved")
                     }
 
                 } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
@@ -128,6 +137,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                             noteModel.id = id
                         }
                         noteViewModel.updateExistingNote(noteModel)
+                        toast("Note Saved")
                     }
 
                 }
@@ -290,14 +300,14 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             if (it.isEmpty()) {
                 noNote = true
                 binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.svGetYourImportantNote.visibility =
+                binding.etGetYourImportantNote.visibility =
                     if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
 
 
             } else {
                 noNote = false
                 binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.svGetYourImportantNote.visibility =
+                binding.etGetYourImportantNote.visibility =
                     if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
             }
         }

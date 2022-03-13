@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView_note"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    app:cardCornerRadius="10dp"
-    android:id="@+id/cardView_note"
-    >
+    app:cardCornerRadius="10dp">
+
+    <View
+        android:id="@+id/view_importance"
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp">
+
 
         <TextView
             android:id="@+id/tv_noteTitle"
@@ -27,7 +32,6 @@
             android:id="@+id/tv_noteDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@string/note_description"
             android:textColor="@color/light_dart"
             android:textSize="17sp"
@@ -38,7 +42,7 @@
             android:id="@+id/tv_noteDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/note_day"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"

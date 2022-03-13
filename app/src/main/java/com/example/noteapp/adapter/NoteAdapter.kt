@@ -36,26 +36,17 @@ class NoteAdapter(
         holder.description.text = lists[position].noteDetails
 
         when (lists[position].importance) {
-            0 -> holder.cardView.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    holder.cardView.context,
-                    R.color.low_card_background
-                )
-            )
+            0 -> holder.viewImportance.setBackgroundResource(R.color.low_card_background)
+            1 -> holder.viewImportance.setBackgroundResource(R.color.medium_card_background)
+            2 -> holder.viewImportance.setBackgroundResource(R.color.high_card_background)
 
-            1 -> holder.cardView.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    holder.cardView.context,
-                    R.color.medium_card_background
-                )
-            )
 
-            2 -> holder.cardView.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    holder.cardView.context,
-                    R.color.high_card_background
-                )
-            )
+//                holder.cardView.setCardBackgroundColor(
+//                ContextCompat.getColor(
+//                    holder.cardView.context,
+//                    R.color.low_card_background
+//                )
+//            )
         }
 
         when (lists[position].noteDate) {
@@ -80,8 +71,9 @@ class NoteAdapter(
         val title: TextView = ItemView.findViewById(R.id.tv_noteTitle)
         val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
         val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
-        val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
 
+        // val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
+        val viewImportance: View = ItemView.findViewById(R.id.view_importance)
 
     }
 

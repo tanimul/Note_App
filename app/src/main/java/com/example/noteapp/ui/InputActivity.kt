@@ -77,7 +77,7 @@ class InputActivity : AppBaseActivity() {
         if (binding.etTitle.text.toString().isEmpty() && binding.etDescription.text.toString()
                 .isEmpty()
         ) {
-            toast("Not Saved")
+            Log.d(TAG, "Note saveNote: ")
         } else {
 
             val noteModel = NoteModel(

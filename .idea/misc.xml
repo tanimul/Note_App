@@ -13,12 +13,14 @@
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_help.xml" value="0.19" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_list.xml" value="0.19" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_menu.xml" value="0.19" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_search.xml" value="0.1825" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/ic_settings.xml" value="0.19" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/icc_add.xml" value="0.19" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/layout_edit_text.xml" value="0.3135" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/search_background.xml" value="0.1825" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/simple_background_edit_text.xml" value="0.3135" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/drawable/spinner_background_edit_text.xml" value="0.164" />
-        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_home.xml" value="0.14" />
+        <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_input.xml" value="0.25" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Kotlin/Android Kotlin/NoteApp/app/src/main/res/layout/layout_note.xml" value="0.22" />
