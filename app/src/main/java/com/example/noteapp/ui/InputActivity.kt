@@ -3,19 +3,18 @@ package com.example.noteapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.example.Constants
 import com.example.noteapp.R
+import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.databinding.ActivityInputBinding
-import com.example.noteapp.extentions.toast
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.utils.Constants
 import com.example.noteapp.viewmodel.NoteViewModel
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
 class InputActivity : AppBaseActivity() {
+
     private val TAG = "InputActivity"
     private lateinit var binding: ActivityInputBinding
     private lateinit var noteViewModel: NoteViewModel
@@ -27,23 +26,17 @@ class InputActivity : AppBaseActivity() {
         binding = ActivityInputBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setToolbar(binding.toolbarLayout.toolbar)
-        title = if (intent.extras != null) {
+        binding.tvNoteTitle.text = if (intent.extras != null) {
             getText(R.string.update_note).toString()
         } else {
             getText(R.string.add_note).toString()
         }
-
-        //Spinner
-        spinnerPriorityTypes()
-
 
         if (intent.extras != null) {
             existingNoteModel = intent.extras?.getSerializable("noteModel") as NoteModel
             Log.d(TAG, "onCreate: $existingNoteModel")
             binding.etTitle.setText(existingNoteModel.noteTitle)
             binding.etDescription.setText(existingNoteModel.noteDetails)
-            binding.spinnerPriority.setSelection(existingNoteModel.importance);
         }
 
         //get current date and time
@@ -55,21 +48,22 @@ class InputActivity : AppBaseActivity() {
             SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
         Log.d(TAG, "onCreate: $formattedTime")
 
-
         //note viewModel initialize
         noteViewModel = ViewModelProvider(
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[NoteViewModel::class.java]
 
-        binding.btSave.setOnClickListener {
+        binding.tvDateTime.text =
+            SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
+                Date()
+            )
 
+        binding.ivSaveNote.setOnClickListener {
             saveNote()
-
-
         }
 
-        binding.ibDropdown.setOnClickListener {
-            binding.spinnerPriority.performClick()
+        binding.icBack.setOnClickListener {
+            saveNote()
         }
     }
 
@@ -85,7 +79,7 @@ class InputActivity : AppBaseActivity() {
                 noteDetails = binding.etDescription.text.toString(),
                 noteDate = formattedDate,
                 noteTime = formattedTime,
-                importance = binding.spinnerPriority.selectedItemPosition
+                importance = 1
             )
             // noteViewModel.addSingleNote(noteModel)
             val resultIntent = Intent()
@@ -111,19 +105,7 @@ class InputActivity : AppBaseActivity() {
 
         }
 
-
         finish()
-    }
-
-
-    private fun spinnerPriorityTypes() {
-        val priorityAdapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            resources.getStringArray(R.array.priority_types)
-        )
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerPriority.adapter = priorityAdapter
     }
 
     override fun onBackPressed() {

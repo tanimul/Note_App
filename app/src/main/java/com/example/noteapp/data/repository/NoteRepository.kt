@@ -1,9 +1,9 @@
-package com.example.noteapp.repository
+package com.example.noteapp.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.noteapp.interfaces.NoteDao
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.data.database.NoteDao
+import com.example.noteapp.data.model.NoteModel
 
 class NoteRepository(private val noteDao: NoteDao) {
     private val TAG= "NoteRepository"

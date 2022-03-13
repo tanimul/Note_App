@@ -18,6 +18,8 @@
     <string name="low">Low</string>
     <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
+    <string name="no_notes_create_your_first_note">No Notes! Create your first note.</string>
+    <string name="type_note_here">Type note here...</string>
 
     <string-array name="priority_types">
         <item>Low</item>

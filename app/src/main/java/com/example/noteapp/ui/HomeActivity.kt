@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.Constants
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
+import com.example.noteapp.data.listner.OnNoteClickListener
+import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.databinding.ActivityHomeBinding
 import com.example.noteapp.extentions.toast
-import com.example.noteapp.interfaces.OnNoteClickListener
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.utils.Constants
 import com.example.noteapp.viewmodel.NoteViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable
@@ -34,6 +34,7 @@ import java.util.*
 
 
 class HomeActivity : AppBaseActivity(), OnNoteClickListener {
+
     private val TAG = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
     private lateinit var noteViewModel: NoteViewModel
@@ -51,7 +52,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         formattedDate =
             SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(Date())
         Log.d(TAG, "onCreate: $formattedDate")
-
 
         //note viewModel initialize
         noteViewModel = ViewModelProvider(
@@ -76,33 +76,22 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         //showNotes
         showNotes()
 
-
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
-            // launchActivity<InputActivity>()
             val intent = Intent(this, InputActivity::class.java)
             noteActResult.launch(intent)
         }
 
 
-        binding.etGetYourImportantNote.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
                 Log.d(TAG, "onQueryTextChange: $s")
                 noteAdapter.filter.filter(s)
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-                // TODO Auto-generated method stub
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-                // filter your list from your input
-
-                //you can use runnable postDelayed like 500 ms to delay search text
-            }
+            override fun afterTextChanged(s: Editable) {}
         })
 
 
@@ -184,15 +173,10 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         when (item.itemId) {
             R.id.menu_listView -> {
                 binding.rvNoteList.layoutManager = LinearLayoutManager(this)
-                // item.isVisible = false
-                //  optionMenu?.findItem(R.id.menu_gridView)?.isVisible = true
             }
             R.id.menu_gridView -> {
                 binding.rvNoteList.layoutManager =
                     StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-                // item.isVisible = false
-
-                // optionMenu?.findItem(R.id.menu_listView)?.isVisible = true
             }
             R.id.menu_help -> {
             }
@@ -201,9 +185,9 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                 //delete Note
                 deleteAll()
             }
-//            R.id.menu_setting -> {
-//                // dialog.show()
-//            }
+            R.id.menu_setting -> {
+                // dialog.show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -300,14 +284,14 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             if (it.isEmpty()) {
                 noNote = true
                 binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.etGetYourImportantNote.visibility =
+                binding.etSearch.visibility =
                     if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
 
 
             } else {
                 noNote = false
                 binding.tvStatus.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.etGetYourImportantNote.visibility =
+                binding.etSearch.visibility =
                     if (it.isEmpty()) View.INVISIBLE else View.VISIBLE
             }
         }
