@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.Constants
+import com.example.noteapp.utils.Constants
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
 import com.example.noteapp.databinding.ActivityHomeBinding
 import com.example.noteapp.extentions.toast
-import com.example.noteapp.interfaces.OnNoteClickListener
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.data.listner.OnNoteClickListener
+import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable

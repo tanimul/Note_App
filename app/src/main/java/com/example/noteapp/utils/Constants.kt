@@ -1,4 +1,4 @@
-package com.example
+package com.example.noteapp.utils
 
 object Constants {
     object RequestCodes {

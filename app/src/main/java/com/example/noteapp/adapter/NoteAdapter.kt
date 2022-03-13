@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
-import com.example.noteapp.interfaces.OnNoteClickListener
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.data.listner.OnNoteClickListener
+import com.example.noteapp.data.model.NoteModel
 
 
 class NoteAdapter(

@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.example.Constants
+import com.example.noteapp.utils.Constants
 import com.example.noteapp.R
 import com.example.noteapp.databinding.ActivityInputBinding
-import com.example.noteapp.extentions.toast
-import com.example.noteapp.model.NoteModel
+import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.viewmodel.NoteViewModel
 import java.io.Serializable
 import java.text.SimpleDateFormat
