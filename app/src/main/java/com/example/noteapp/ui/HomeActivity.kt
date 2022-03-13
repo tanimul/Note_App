@@ -110,7 +110,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                     Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
                     if (it.data != null) {
                         noteViewModel.addSingleNote(noteModel)
-                        toast("Note Saved")
+                        //toast("Note Saved")
                     }
 
                 } else if (it.resultCode == Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE) {
@@ -126,7 +126,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
                             noteModel.id = id
                         }
                         noteViewModel.updateExistingNote(noteModel)
-                        toast("Note Saved")
+                        //toast("Note Saved")
                     }
 
                 }
