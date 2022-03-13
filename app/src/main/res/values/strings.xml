@@ -18,7 +18,7 @@
     <string name="low">Low</string>
     <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
-    <string name="no_notes_create_your_first_note">No Notes! Create your first note.</string>
+    <string name="no_notes_create_your_first_note">No Notes Found! \nCreate your first note.</string>
     <string name="type_note_here">Type note here...</string>
     <string name="more_options">More Options</string>
     <string name="delete_note">Delete Note</string>

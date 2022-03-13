@@ -13,7 +13,8 @@ import com.example.noteapp.R
 import com.example.noteapp.data.model.NoteModel
 import com.example.noteapp.databinding.ActivityInputBinding
 import com.example.noteapp.extentions.toast
-import com.example.noteapp.utils.Constants
+import com.example.noteapp.utils.Constants.REQUEST_CODE_ADD_NOTE
+import com.example.noteapp.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import com.example.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.Serializable
@@ -97,14 +98,14 @@ class InputActivity : AppBaseActivity() {
                 )
                 resultIntent.putExtra("existingNoteId", existingNoteModel.id)
                 setResult(
-                    Constants.RequestCodes.REQUEST_CODE_EDIT_NOTE, resultIntent
+                    REQUEST_CODE_EDIT_NOTE, resultIntent
                 )
                 Log.d(TAG, "editNote: ")
 
             } else {
 
                 setResult(
-                    Constants.RequestCodes.REQUEST_CODE_ADD_NOTE,
+                    REQUEST_CODE_ADD_NOTE,
                     resultIntent.putExtra("noteModel", noteModel as Serializable)
                 )
                 Log.d(TAG, "addNote: ")
