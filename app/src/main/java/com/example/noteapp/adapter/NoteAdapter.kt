@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.data.listner.OnNoteClickListener
@@ -32,6 +33,9 @@ class NoteAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.title.isVisible = lists[position].noteTitle.isNotEmpty()
+        holder.description.isVisible = lists[position].noteDetails.isNotEmpty()
+
         holder.title.text = lists[position].noteTitle
         holder.description.text = lists[position].noteDetails
 
