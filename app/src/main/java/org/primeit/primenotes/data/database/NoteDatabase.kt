@@ -1,10 +1,10 @@
-package com.example.noteapp.data.database
+package org.primeit.primenotes.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.noteapp.data.model.NoteModel
+import org.primeit.primenotes.data.model.NoteModel
 
 @Database(entities = [NoteModel::class], version = 2, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {

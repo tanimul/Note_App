@@ -1,4 +1,4 @@
-package com.example.noteapp.data.model
+package org.primeit.primenotes.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

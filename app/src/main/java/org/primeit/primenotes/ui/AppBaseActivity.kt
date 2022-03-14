@@ -1,10 +1,10 @@
-package com.example.noteapp.ui
+package org.primeit.primenotes.ui
 
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.example.noteapp.R
+import org.primeit.primenotes.R
 
 open class AppBaseActivity : AppCompatActivity() {
 

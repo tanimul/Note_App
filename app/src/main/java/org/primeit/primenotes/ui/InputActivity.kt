@@ -1,4 +1,4 @@
-package com.example.noteapp.ui
+package org.primeit.primenotes.ui
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -9,13 +9,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import com.example.noteapp.R
-import com.example.noteapp.data.model.NoteModel
-import com.example.noteapp.databinding.ActivityInputBinding
 import com.example.noteapp.extentions.toast
-import com.example.noteapp.utils.Constants.REQUEST_CODE_ADD_NOTE
-import com.example.noteapp.utils.Constants.REQUEST_CODE_EDIT_NOTE
-import com.example.noteapp.viewmodel.NoteViewModel
+import org.primeit.primenotes.R
+import org.primeit.primenotes.data.model.NoteModel
+import org.primeit.primenotes.databinding.ActivityInputBinding
+import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
+import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.primeit.primenotes.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.Serializable
 import java.text.SimpleDateFormat

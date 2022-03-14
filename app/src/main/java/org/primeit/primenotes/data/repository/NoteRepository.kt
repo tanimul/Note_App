@@ -1,9 +1,9 @@
-package com.example.noteapp.data.repository
+package org.primeit.primenotes.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.noteapp.data.database.NoteDao
-import com.example.noteapp.data.model.NoteModel
+import org.primeit.primenotes.data.database.NoteDao
+import org.primeit.primenotes.data.model.NoteModel
 
 class NoteRepository(private val noteDao: NoteDao) {
     private val TAG= "NoteRepository"

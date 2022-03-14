@@ -1,4 +1,4 @@
-package com.example.noteapp.adapter
+package org.primeit.primenotes.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.noteapp.R
-import com.example.noteapp.data.listner.OnNoteClickListener
-import com.example.noteapp.data.model.NoteModel
+import org.primeit.primenotes.R
+import org.primeit.primenotes.data.listner.OnNoteClickListener
+import org.primeit.primenotes.data.model.NoteModel
 import java.text.SimpleDateFormat
 import java.util.*
 

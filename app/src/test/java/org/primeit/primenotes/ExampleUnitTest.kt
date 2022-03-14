@@ -1,4 +1,4 @@
-package com.example.noteapp
+package org.primeit.primenotes
 
 import org.junit.Test
 

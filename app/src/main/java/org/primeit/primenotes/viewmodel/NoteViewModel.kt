@@ -1,12 +1,12 @@
-package com.example.noteapp.viewmodel
+package org.primeit.primenotes.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.noteapp.data.model.NoteModel
-import com.example.noteapp.data.repository.NoteRepository
-import com.example.noteapp.data.database.NoteDatabase
+import org.primeit.primenotes.data.model.NoteModel
+import org.primeit.primenotes.data.repository.NoteRepository
+import org.primeit.primenotes.data.database.NoteDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

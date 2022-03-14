@@ -1,4 +1,4 @@
-package com.example.noteapp.ui
+package org.primeit.primenotes.ui
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -19,14 +19,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.noteapp.R
-import com.example.noteapp.adapter.NoteAdapter
-import com.example.noteapp.data.listner.OnNoteClickListener
-import com.example.noteapp.data.model.NoteModel
-import com.example.noteapp.databinding.ActivityHomeBinding
-import com.example.noteapp.utils.Constants.REQUEST_CODE_ADD_NOTE
-import com.example.noteapp.utils.Constants.REQUEST_CODE_EDIT_NOTE
-import com.example.noteapp.viewmodel.NoteViewModel
+import org.primeit.primenotes.R
+import org.primeit.primenotes.adapter.NoteAdapter
+import org.primeit.primenotes.data.listner.OnNoteClickListener
+import org.primeit.primenotes.data.model.NoteModel
+import org.primeit.primenotes.databinding.ActivityHomeBinding
+import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
+import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.primeit.primenotes.viewmodel.NoteViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable
 import java.text.SimpleDateFormat

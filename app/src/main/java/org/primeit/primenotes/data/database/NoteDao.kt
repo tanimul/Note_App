@@ -1,8 +1,8 @@
-package com.example.noteapp.data.database
+package org.primeit.primenotes.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.noteapp.data.model.NoteModel
+import org.primeit.primenotes.data.model.NoteModel
 
 @Dao
 interface NoteDao {
