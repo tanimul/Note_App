@@ -22,6 +22,8 @@
             android:id="@+id/tv_noteTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@string/note_title"
             android:textColor="@color/colorTextDark"
             android:textSize="20sp"

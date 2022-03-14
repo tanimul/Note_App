@@ -45,6 +45,7 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_NoteApp)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
