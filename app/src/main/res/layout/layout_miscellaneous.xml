@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="15dp"
-        android:baselineAligned="false"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
