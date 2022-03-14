@@ -4,9 +4,13 @@
     android:id="@+id/cardView_note"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/colorBackground"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp">
 
     <View
         android:id="@+id/view_importance"

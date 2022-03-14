@@ -15,7 +15,10 @@
     <color name="colorBackground">#F8F8F8</color>
     <color name="buttonBackground">#F8F8F8</color>
     <color name="button_importance_Background">#F8F8F8</color>
-    <color name="low_card_background">#5CB187</color>
-    <color name="medium_card_background">#EEBE5C</color>
-    <color name="high_card_background">#F1755B</color>
+    <color name="colorNote1">#5CB187</color>
+    <color name="colorBackground1">#E6FFF3</color>
+    <color name="colorNote2">#EEBE5C</color>
+    <color name="colorBackground2">#FFFBF2</color>
+    <color name="colorNote3">#F1755B</color>
+    <color name="colorBackground3">#FFF1F1</color>
 </resources>

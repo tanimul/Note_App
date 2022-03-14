@@ -4,7 +4,7 @@
         <shape android:shape="oval">
             <stroke
                 android:width="2dp"
-                android:color="@color/high_card_background" />
+                android:color="@color/colorNote3" />
         </shape>
     </item>
     <item
@@ -24,7 +24,7 @@
         android:right="6dp"
         android:top="6dp">
         <shape android:shape="oval">
-            <solid android:color="@color/high_card_background" />
+            <solid android:color="@color/colorNote3" />
         </shape>
     </item>
 

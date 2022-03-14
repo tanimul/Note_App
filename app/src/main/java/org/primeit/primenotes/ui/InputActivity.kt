@@ -5,18 +5,20 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteapp.extentions.toast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.primeit.primenotes.R
 import org.primeit.primenotes.data.model.NoteModel
 import org.primeit.primenotes.databinding.ActivityInputBinding
 import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
 import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import org.primeit.primenotes.viewmodel.NoteViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -137,9 +139,21 @@ class InputActivity : AppBaseActivity() {
         val imageColor3 = miscellaneous.findViewById<ImageView>(R.id.imageColor3)
 
         when (priorityCode) {
-            0 -> imageColor1.setImageResource(R.drawable.done_vector)
-            1 -> imageColor2.setImageResource(R.drawable.done_vector)
-            2 -> imageColor3.setImageResource(R.drawable.done_vector)
+            0 -> {
+                imageColor1.setImageResource(R.drawable.done_vector)
+                binding.rootLayout.setBackgroundResource(R.color.colorBackground1)
+                setStatusBarColor(R.color.colorBackground1)
+            }
+            1 -> {
+                imageColor2.setImageResource(R.drawable.done_vector)
+                binding.rootLayout.setBackgroundResource(R.color.colorBackground2)
+                setStatusBarColor(R.color.colorBackground2)
+            }
+            2 -> {
+                imageColor3.setImageResource(R.drawable.done_vector)
+                binding.rootLayout.setBackgroundResource(R.color.colorBackground3)
+                setStatusBarColor(R.color.colorBackground3)
+            }
         }
 
         miscellaneous.findViewById<View>(R.id.imageColor1).setOnClickListener {
@@ -147,18 +161,24 @@ class InputActivity : AppBaseActivity() {
             imageColor1.setImageResource(R.drawable.done_vector)
             imageColor2.setImageResource(0)
             imageColor3.setImageResource(0)
+            binding.rootLayout.setBackgroundResource(R.color.colorBackground1)
+            setStatusBarColor(R.color.colorBackground1)
         }
         miscellaneous.findViewById<View>(R.id.imageColor2).setOnClickListener {
             priorityCode = 1
             imageColor1.setImageResource(0)
             imageColor2.setImageResource(R.drawable.done_vector)
             imageColor3.setImageResource(0)
+            binding.rootLayout.setBackgroundResource(R.color.colorBackground2)
+            setStatusBarColor(R.color.colorBackground2)
         }
         miscellaneous.findViewById<View>(R.id.imageColor3).setOnClickListener {
             priorityCode = 2
             imageColor1.setImageResource(0)
             imageColor2.setImageResource(0)
             imageColor3.setImageResource(R.drawable.done_vector)
+            binding.rootLayout.setBackgroundResource(R.color.colorBackground3)
+            setStatusBarColor(R.color.colorBackground3)
         }
 
 
@@ -191,6 +211,12 @@ class InputActivity : AppBaseActivity() {
                 .setOnClickListener { dialogDeleteNote!!.dismiss() }
         }
         dialogDeleteNote!!.show()
+    }
+
+    private fun setStatusBarColor(colorCode: Int) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(this, colorCode)
     }
 }
 
