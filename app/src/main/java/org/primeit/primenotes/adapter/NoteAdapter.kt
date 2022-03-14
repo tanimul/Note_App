@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.primeit.primenotes.R
@@ -39,9 +41,33 @@ class NoteAdapter(
         holder.description.text = lists[position].noteDetails
 
         when (lists[position].importance) {
-            0 -> holder.viewImportance.setBackgroundResource(R.color.low_card_background)
-            1 -> holder.viewImportance.setBackgroundResource(R.color.medium_card_background)
-            2 -> holder.viewImportance.setBackgroundResource(R.color.high_card_background)
+            0 -> {
+                holder.viewImportance.setBackgroundResource(R.color.colorNote1)
+                holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        holder.itemView.context,
+                        R.color.colorBackground1
+                    )
+                )
+            }
+            1 -> {
+                holder.viewImportance.setBackgroundResource(R.color.colorNote2)
+                holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        holder.itemView.context,
+                        R.color.colorBackground2
+                    )
+                )
+            }
+            2 -> {
+                holder.viewImportance.setBackgroundResource(R.color.colorNote3)
+                holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        holder.itemView.context,
+                        R.color.colorBackground3
+                    )
+                )
+            }
         }
 
         when (SimpleDateFormat(
@@ -72,8 +98,7 @@ class NoteAdapter(
         val title: TextView = ItemView.findViewById(R.id.tv_noteTitle)
         val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
         val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
-
-        // val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
+        val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
         val viewImportance: View = ItemView.findViewById(R.id.view_importance)
 
     }
