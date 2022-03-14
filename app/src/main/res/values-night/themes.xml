@@ -18,4 +18,8 @@
     <style name="Floating" parent="Widget.Design.FloatingActionButton">
         <item name="android:foreground">@drawable/ic_addition</item>
     </style>
+
+    <style name="AppTheme.Splash" parent="Theme.NoteApp">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
 </resources>
