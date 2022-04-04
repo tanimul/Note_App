@@ -18,7 +18,7 @@
         android:includeFontPadding="false"
         android:text="@string/more_options"
         android:textAllCaps="true"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/primaryColorText"
         android:textSize="16sp" />
 
     <LinearLayout

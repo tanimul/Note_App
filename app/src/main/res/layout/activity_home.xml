@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+
     tools:context="org.primeit.primenotes.ui.HomeActivity">
 
     <include
@@ -13,13 +13,13 @@
 
     <EditText
         android:id="@+id/et_search"
+        style="@style/MyEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="50dp"
         android:autofillHints="no"
-        android:background="@drawable/search_background"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="10dp"
         android:hint="@string/query_hint"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimary">#FFFFFF</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -9,19 +9,19 @@
     <color name="black">#FF000000</color>
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorTextDark">#202020</color>
-    <color name="colorTextLight">#737373</color>
-    <color name="primaryColorText">#202020</color>
+    <color name="colorTextDark">#EAEAEA</color>
+    <color name="colorTextLight">#C1C1C1</color>
+    <color name="primaryColorText">#EFEFEF</color>
     <color name="gray">#E3E3E3</color>
-    <color name="colorBackground">#F8F8F8</color>
+    <color name="colorBackground">#1A1A1A</color>
     <color name="buttonBackground">#F8F8F8</color>
     <color name="button_importance_Background">#F8F8F8</color>
     <color name="colorNote1">#06D6A0</color>
-    <color name="colorBackground1">#E6FFF3</color>
+    <color name="colorBackground1">#121E18</color>
     <color name="colorNote2">#FFD166</color>
-    <color name="colorBackground2">#FFFBF2</color>
+    <color name="colorBackground2">#23221D</color>
     <color name="colorNote3">#EF476F</color>
-    <color name="colorBackground3">#FFF1F1</color>
+    <color name="colorBackground3">#231C1c</color>
     <color name="hintColor">#808080</color>
-    <color name="imageButton_background_color">#0A000000</color>
+    <color name="imageButton_background_color">#0AFFFFFF</color>
 </resources>

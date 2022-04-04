@@ -11,15 +11,33 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:textColorHint">@color/hintColor</item>
     </style>
+
 
     <style name="Floating" parent="Widget.Design.FloatingActionButton">
         <item name="android:foreground">@drawable/ic_addition</item>
     </style>
 
+    <style name="Theme.NoteApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.Splash" parent="Theme.NoteApp">
         <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorBackground</item>
+    </style>
+
+    <style name="MyEditText">
+        <item name="android:background">@drawable/search_background</item>
+        <item name="backgroundColor">@color/black</item>
     </style>
 </resources>

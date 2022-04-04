@@ -13,6 +13,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/colorBackground</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:textColorHint">@color/hintColor</item>
     </style>
 
     <style name="Floating" parent="Widget.Design.FloatingActionButton">
@@ -26,6 +29,15 @@
 
     <style name="AppTheme.Splash" parent="Theme.NoteApp">
         <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorBackground</item>
+    </style>
+
+    <style name="MyEditText">
+        <item name="android:background">@drawable/search_background</item>
+        <item name="backgroundColor">@color/white</item>
     </style>
 
 </resources>
