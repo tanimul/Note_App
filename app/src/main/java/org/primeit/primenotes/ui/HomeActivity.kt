@@ -1,7 +1,10 @@
 package org.primeit.primenotes.ui
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
@@ -10,8 +13,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -19,15 +24,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import org.primeit.primenotes.R
 import org.primeit.primenotes.adapter.NoteAdapter
 import org.primeit.primenotes.data.listner.OnNoteClickListener
 import org.primeit.primenotes.data.model.NoteModel
 import org.primeit.primenotes.databinding.ActivityHomeBinding
+import org.primeit.primenotes.service.MyNotification
 import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
 import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import org.primeit.primenotes.viewmodel.NoteViewModel
-import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,12 +48,17 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
     private lateinit var noteAdapter: NoteAdapter
     private lateinit var formattedDate: String
     private var optionMenu: Menu? = null
-
+    var pendingIntent: PendingIntent? = null
+    var alarmManager: AlarmManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_NoteApp)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        ///For setting alarm Specific time
+        setAlarm()
 
         //get current date and time
         formattedDate =
@@ -97,6 +108,12 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
 
         deleteForSwipe()
+
+        dailyNotification()
+    }
+
+    private fun dailyNotification() {
+
     }
 
     private val noteActResult =
@@ -288,5 +305,24 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         }
         return noNote
     }
-}
 
+    private fun setAlarm() {
+        Log.d(TAG, "setAlarm: ")
+
+
+        val calendar = Calendar.getInstance()
+        calendar[Calendar.HOUR_OF_DAY] = 21
+        calendar[Calendar.MINUTE] = 0
+        val intent = Intent(this, MyNotification::class.java)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager?.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+        //   alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
+
+    }
+
+}
