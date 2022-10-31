@@ -1,9 +1,9 @@
-package org.primeit.primenotes.data.repository
+package org.tanimul.notes.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import org.primeit.primenotes.data.database.NoteDao
-import org.primeit.primenotes.data.model.NoteModel
+import org.tanimul.notes.data.database.NoteDao
+import org.tanimul.notes.data.model.NoteModel
 
 class NoteRepository(private val noteDao: NoteDao) {
     private val TAG= "NoteRepository"

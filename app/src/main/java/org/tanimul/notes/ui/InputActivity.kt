@@ -1,4 +1,4 @@
-package org.primeit.primenotes.ui
+package org.tanimul.notes.ui
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -13,12 +13,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteapp.extentions.toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import org.primeit.primenotes.R
-import org.primeit.primenotes.data.model.NoteModel
-import org.primeit.primenotes.databinding.ActivityInputBinding
-import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
-import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
-import org.primeit.primenotes.viewmodel.NoteViewModel
+import org.tanimul.notes.R
+import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.databinding.ActivityInputBinding
+import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
+import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.tanimul.notes.viewmodel.NoteViewModel
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*

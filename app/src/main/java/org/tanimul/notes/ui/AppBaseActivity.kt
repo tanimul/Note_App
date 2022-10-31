@@ -1,10 +1,10 @@
-package org.primeit.primenotes.ui
+package org.tanimul.notes.ui
 
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import org.primeit.primenotes.R
+import org.tanimul.notes.R
 
 open class AppBaseActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package org.primeit.primenotes
+package org.tanimul.notes
 
 import org.junit.Test
 

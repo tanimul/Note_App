@@ -1,4 +1,4 @@
-package org.primeit.primenotes.service
+package org.tanimul.notes.service
 
 
 import android.app.Notification
@@ -16,8 +16,8 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import org.primeit.primenotes.R
-import org.primeit.primenotes.ui.HomeActivity
+import org.tanimul.notes.R
+import org.tanimul.notes.ui.HomeActivity
 import java.util.*
 
 

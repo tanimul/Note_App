@@ -1,8 +1,8 @@
-package org.primeit.primenotes.data.database
+package org.tanimul.notes.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import org.primeit.primenotes.data.model.NoteModel
+import org.tanimul.notes.data.model.NoteModel
 
 @Dao
 interface NoteDao {

@@ -1,9 +1,8 @@
-package org.primeit.primenotes.ui
+package org.tanimul.notes.ui
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.AlertDialog
-import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Canvas
@@ -13,10 +12,8 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -25,15 +22,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import org.primeit.primenotes.R
-import org.primeit.primenotes.adapter.NoteAdapter
-import org.primeit.primenotes.data.listner.OnNoteClickListener
-import org.primeit.primenotes.data.model.NoteModel
-import org.primeit.primenotes.databinding.ActivityHomeBinding
-import org.primeit.primenotes.service.MyNotification
-import org.primeit.primenotes.utils.Constants.REQUEST_CODE_ADD_NOTE
-import org.primeit.primenotes.utils.Constants.REQUEST_CODE_EDIT_NOTE
-import org.primeit.primenotes.viewmodel.NoteViewModel
+import org.tanimul.notes.R
+import org.tanimul.notes.adapter.NoteAdapter
+import org.tanimul.notes.data.listner.OnNoteClickListener
+import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.databinding.ActivityHomeBinding
+import org.tanimul.notes.service.MyNotification
+import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
+import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.tanimul.notes.viewmodel.NoteViewModel
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*

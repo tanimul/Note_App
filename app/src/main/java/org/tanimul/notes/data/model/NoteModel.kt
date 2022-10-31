@@ -1,4 +1,4 @@
-package org.primeit.primenotes.data.model
+package org.tanimul.notes.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

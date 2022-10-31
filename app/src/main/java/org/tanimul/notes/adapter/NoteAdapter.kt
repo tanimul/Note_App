@@ -1,4 +1,4 @@
-package org.primeit.primenotes.adapter
+package org.tanimul.notes.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import org.primeit.primenotes.R
-import org.primeit.primenotes.data.listner.OnNoteClickListener
-import org.primeit.primenotes.data.model.NoteModel
+import org.tanimul.notes.R
+import org.tanimul.notes.data.listner.OnNoteClickListener
+import org.tanimul.notes.data.model.NoteModel
 import java.text.SimpleDateFormat
 import java.util.*
 

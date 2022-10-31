@@ -1,10 +1,10 @@
-package org.primeit.primenotes.data.database
+package org.tanimul.notes.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.primeit.primenotes.data.model.NoteModel
+import org.tanimul.notes.data.model.NoteModel
 
 @Database(entities = [NoteModel::class], version = 2, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {
