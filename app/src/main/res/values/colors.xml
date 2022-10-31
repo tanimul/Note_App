@@ -18,8 +18,8 @@
     <color name="button_importance_Background">#F8F8F8</color>
     <color name="colorNote1">#06D6A0</color>
     <color name="colorBackground1">#E6FFF3</color>
-    <color name="colorNote2">#FFD166</color>
-    <color name="colorBackground2">#FFFBF2</color>
+    <color name="colorNote2">#55A2C8</color>
+    <color name="colorBackground2">#F0FAFF</color>
     <color name="colorNote3">#EF476F</color>
     <color name="colorBackground3">#FFF1F1</color>
     <color name="hintColor">#808080</color>

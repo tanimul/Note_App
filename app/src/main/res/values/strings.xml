@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Prime Notes</string>
+    <string name="app_name">Notes</string>
     <string name="note_title">Note Title</string>
     <string name="note_day">Note Day</string>
     <string name="note_description">Note Description</string>
