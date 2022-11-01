@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.noteapp.extentions.toast
+import org.tanimul.notes.utils.toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.tanimul.notes.R
 import org.tanimul.notes.data.model.NoteModel

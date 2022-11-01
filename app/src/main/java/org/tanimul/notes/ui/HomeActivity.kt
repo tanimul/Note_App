@@ -1,9 +1,7 @@
 package org.tanimul.notes.ui
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.AlertDialog
-import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
@@ -27,7 +25,6 @@ import org.tanimul.notes.adapter.NoteAdapter
 import org.tanimul.notes.data.listner.OnNoteClickListener
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.ActivityHomeBinding
-import org.tanimul.notes.service.MyNotification
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import org.tanimul.notes.viewmodel.NoteViewModel
@@ -45,17 +42,12 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
     private lateinit var noteAdapter: NoteAdapter
     private lateinit var formattedDate: String
     private var optionMenu: Menu? = null
-    var pendingIntent: PendingIntent? = null
-    var alarmManager: AlarmManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_NoteApp)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        ///For setting alarm Specific time
-        setAlarm()
 
         //get current date and time
         formattedDate =
@@ -303,23 +295,5 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         return noNote
     }
 
-    private fun setAlarm() {
-        Log.d(TAG, "setAlarm: ")
-
-
-        val calendar = Calendar.getInstance()
-        calendar[Calendar.HOUR_OF_DAY] = 21
-        calendar[Calendar.MINUTE] = 0
-        val intent = Intent(this, MyNotification::class.java)
-        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
-        alarmManager?.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
-        //   alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
-
-    }
 
 }

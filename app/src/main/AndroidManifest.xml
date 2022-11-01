@@ -26,9 +26,6 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="org.tanimul.notes.service.MyNotification"
-            android:enabled="true" />
     </application>
 
 </manifest>
