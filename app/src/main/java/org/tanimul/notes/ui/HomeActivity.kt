@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import org.tanimul.notes.R
 import org.tanimul.notes.adapter.NoteAdapter
-import org.tanimul.notes.data.listner.OnNoteClickListener
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.ActivityHomeBinding
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
@@ -33,9 +32,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class HomeActivity : AppBaseActivity(), OnNoteClickListener {
-
-    private val TAG = "HomeActivity"
+class HomeActivity : AppBaseActivity() {
+    companion object{
+        private val TAG = "HomeActivity"
+    }
     private lateinit var binding: ActivityHomeBinding
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var noteList: ArrayList<NoteModel>
@@ -66,7 +66,15 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
         //arrayList initialize
         noteList = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(noteList, noteList, formattedDate, this);
+        noteAdapter = NoteAdapter(noteList, noteList, formattedDate) {
+            Log.d(TAG, "onItemClick: $it and id is: " + it.id)
+            noteActResult.launch(
+                Intent(this, InputActivity::class.java).putExtra(
+                    "noteModel",
+                    it as Serializable
+                )
+            )
+        }
 
 
         //recyclerView
@@ -97,11 +105,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
 
 
         deleteForSwipe()
-
-        dailyNotification()
-    }
-
-    private fun dailyNotification() {
 
     }
 
@@ -211,16 +214,6 @@ class HomeActivity : AppBaseActivity(), OnNoteClickListener {
             ) { dialog, _ -> dialog.dismiss() }
             .show()
 
-    }
-
-    override fun onItemClick(noteModel: NoteModel) {
-        Log.d(TAG, "onItemClick: $noteModel and id is: " + noteModel.id)
-        noteActResult.launch(
-            Intent(this, InputActivity::class.java).putExtra(
-                "noteModel",
-                noteModel as Serializable
-            )
-        )
     }
 
     //Delete by left to right swipe

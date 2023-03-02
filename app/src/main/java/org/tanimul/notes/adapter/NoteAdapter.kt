@@ -2,119 +2,119 @@ package org.tanimul.notes.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.tanimul.notes.R
-import org.tanimul.notes.data.listner.OnNoteClickListener
 import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.databinding.LayoutNoteBinding
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NoteAdapter(
-    var lists: List<NoteModel>,
+    var noteLists: List<NoteModel>,
     noteList: ArrayList<NoteModel>,
     private val formattedDate: String,
-    private val onNoteClickListener: OnNoteClickListener
-) :
-    RecyclerView.Adapter<NoteAdapter.ViewHolder>(), Filterable {
+    private val onItemClicked: (NoteModel) -> Unit
+) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), Filterable {
     private val TAG = "NoteAdapter"
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_note, parent, false)
+
+    inner class NoteViewHolder(val binding: LayoutNoteBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+        return NoteViewHolder(
+            LayoutNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.isVisible = lists[position].noteTitle.isNotEmpty()
-        holder.description.isVisible = lists[position].noteDetails.isNotEmpty()
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
 
-        holder.title.text = lists[position].noteTitle
-        holder.description.text = lists[position].noteDetails
+        with(holder.binding) {
+            with(noteLists[position]) {
+                tvNoteTitle.isVisible = noteTitle.isNotEmpty()
+                tvNoteDescription.isVisible = noteDetails.isNotEmpty()
 
-        when (lists[position].importance) {
-            0 -> {
-                holder.viewImportance.setBackgroundResource(R.color.colorNote1)
-                holder.cardView.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        holder.itemView.context,
-                        R.color.colorBackground1
-                    )
-                )
+                tvNoteTitle.text = noteTitle
+                tvNoteDescription.text = noteDetails
             }
-            1 -> {
-                holder.viewImportance.setBackgroundResource(R.color.colorNote2)
-                holder.cardView.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        holder.itemView.context,
-                        R.color.colorBackground2
+        }
+
+        when (noteLists[position].importance) {
+
+
+            0 -> {
+                with(holder.binding) {
+                    viewImportance.setBackgroundResource(R.color.colorNote1)
+                    cardViewNote.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context, R.color.colorBackground1
+                        )
                     )
-                )
+                }
+            }
+
+            1 -> {
+                with(holder.binding) {
+                    viewImportance.setBackgroundResource(R.color.colorNote2)
+                    cardViewNote.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context, R.color.colorBackground2
+                        )
+                    )
+                }
             }
             2 -> {
-                holder.viewImportance.setBackgroundResource(R.color.colorNote3)
-                holder.cardView.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        holder.itemView.context,
-                        R.color.colorBackground3
+                with(holder.binding) {
+                    viewImportance.setBackgroundResource(R.color.colorNote3)
+                    cardViewNote.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context, R.color.colorBackground3
+                        )
                     )
-                )
+                }
             }
         }
 
         when (SimpleDateFormat(
-            "MMMM dd, yyyy",
-            Locale.getDefault()
-        ).format(lists[position].updatedAt)) {
-            formattedDate -> holder.date.text =
-                SimpleDateFormat("hh:mm a", Locale.getDefault()).format(lists[position].updatedAt)
-            else ->
-                holder.date.text = SimpleDateFormat(
-                    "MMMM dd, yyyy",
-                    Locale.getDefault()
-                ).format(lists[position].updatedAt)
+            "MMMM dd, yyyy", Locale.getDefault()
+        ).format(noteLists[position].updatedAt)) {
+            formattedDate -> holder.binding.tvNoteDate.text = SimpleDateFormat(
+                "hh:mm a", Locale.getDefault()
+            ).format(noteLists[position].updatedAt)
+            else -> holder.binding.tvNoteDate.text = SimpleDateFormat(
+                "MMMM dd, yyyy", Locale.getDefault()
+            ).format(noteLists[position].updatedAt)
         }
 
         holder.itemView.setOnClickListener {
-            Log.d(TAG, "onBindViewHolder: " + lists[holder.absoluteAdapterPosition])
-            onNoteClickListener.onItemClick(lists[holder.absoluteAdapterPosition])
+            Log.d(TAG, "onBindViewHolder: " + noteLists[holder.absoluteAdapterPosition])
+            onItemClicked.invoke(noteLists[holder.absoluteAdapterPosition])
         }
 
     }
 
     override fun getItemCount(): Int {
-        return lists.size
-    }
-
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val title: TextView = ItemView.findViewById(R.id.tv_noteTitle)
-        val description: TextView = ItemView.findViewById(R.id.tv_noteDescription)
-        val date: TextView = ItemView.findViewById(R.id.tv_noteDate)
-        val cardView: CardView = ItemView.findViewById(R.id.cardView_note)
-        val viewImportance: View = ItemView.findViewById(R.id.view_importance)
-
+        return noteLists.size
     }
 
     override fun getFilter(): Filter {
-        return quearyfilter
+        return queryFilter
     }
 
-    private var quearyfilter: Filter = object : Filter() {
-        override fun performFiltering(constraint: CharSequence): FilterResults {
+    private var queryFilter: Filter = object : Filter() {
+        override fun performFiltering(constSeq: CharSequence): FilterResults {
             val results = FilterResults()
-            if (constraint.isEmpty()) {
+            if (constSeq.isEmpty()) {
                 results.count = noteList.size
                 results.values = noteList
             } else {
-                val searchStr = constraint.toString().uppercase()
+                val searchStr = constSeq.toString().uppercase()
                 val resultsData: MutableList<NoteModel> = ArrayList()
                 for (noteInfo in noteList) {
                     if (noteInfo.noteTitle.uppercase()
@@ -130,8 +130,8 @@ class NoteAdapter(
         }
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            lists = results.values as ArrayList<NoteModel>
-            Log.d(TAG, "publishResults: " + lists.size)
+            noteLists = results.values as ArrayList<NoteModel>
+            Log.d(TAG, "publishResults: " + noteLists.size)
             notifyDataSetChanged()
         }
     }
