@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,19 +41,11 @@ class HomeActivity : AppBaseActivity() {
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var noteList: ArrayList<NoteModel>
     private lateinit var noteAdapter: NoteAdapter
-    private lateinit var formattedDate: String
     private var optionMenu: Menu? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_NoteApp)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-
-        //get current date and time
-        formattedDate =
-            SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(Date())
-        Log.d(TAG, "onCreate: $formattedDate")
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
 
         //note viewModel initialize
         noteViewModel = ViewModelProvider(
@@ -66,7 +59,7 @@ class HomeActivity : AppBaseActivity() {
         //arrayList initialize
         noteList = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(noteList, noteList, formattedDate) {
+        noteAdapter = NoteAdapter(noteList, noteList) {
             Log.d(TAG, "onItemClick: $it and id is: " + it.id)
             noteActResult.launch(
                 Intent(this, InputActivity::class.java).putExtra(

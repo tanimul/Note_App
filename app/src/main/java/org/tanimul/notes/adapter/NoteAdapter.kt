@@ -7,19 +7,18 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.tanimul.notes.R
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.LayoutNoteBinding
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NoteAdapter(
     var noteLists: List<NoteModel>,
     noteList: ArrayList<NoteModel>,
-    private val formattedDate: String,
     private val onItemClicked: (NoteModel) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), Filterable {
     private val TAG = "NoteAdapter"
@@ -29,7 +28,12 @@ class NoteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(
-            LayoutNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.layout_note,
+                parent,
+                false
+            )
         )
     }
 
@@ -40,13 +44,11 @@ class NoteAdapter(
                 tvNoteTitle.isVisible = noteTitle.isNotEmpty()
                 tvNoteDescription.isVisible = noteDetails.isNotEmpty()
 
-                tvNoteTitle.text = noteTitle
-                tvNoteDescription.text = noteDetails
+                holder.binding.note=noteLists[position]
             }
         }
 
         when (noteLists[position].importance) {
-
 
             0 -> {
                 with(holder.binding) {
@@ -79,17 +81,6 @@ class NoteAdapter(
                     )
                 }
             }
-        }
-
-        when (SimpleDateFormat(
-            "MMMM dd, yyyy", Locale.getDefault()
-        ).format(noteLists[position].updatedAt)) {
-            formattedDate -> holder.binding.tvNoteDate.text = SimpleDateFormat(
-                "hh:mm a", Locale.getDefault()
-            ).format(noteLists[position].updatedAt)
-            else -> holder.binding.tvNoteDate.text = SimpleDateFormat(
-                "MMMM dd, yyyy", Locale.getDefault()
-            ).format(noteLists[position].updatedAt)
         }
 
         holder.itemView.setOnClickListener {
