@@ -6,7 +6,10 @@ import org.tanimul.notes.data.database.NoteDao
 import org.tanimul.notes.data.model.NoteModel
 
 class NoteRepository(private val noteDao: NoteDao) {
-    private val TAG= "NoteRepository"
+    companion object {
+        private const val TAG = "NoteRepository"
+    }
+
     var showAllNotes: LiveData<List<NoteModel>> = noteDao.showAllNotes()
 
     suspend fun addSingleNote(noteModel: NoteModel) {
@@ -20,8 +23,7 @@ class NoteRepository(private val noteDao: NoteDao) {
     }
 
     suspend fun updateExistingNote(noteModel: NoteModel) {
-        noteDao.
-        updateExistingNote(noteModel)
+        noteDao.updateExistingNote(noteModel)
         Log.d(TAG, "updateExistingNote: ")
     }
 

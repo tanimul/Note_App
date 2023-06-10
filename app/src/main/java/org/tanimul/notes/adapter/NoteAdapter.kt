@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import org.tanimul.notes.R
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.LayoutNoteBinding
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class NoteAdapter(
-    var noteLists: List<NoteModel>,
+    var notes: List<NoteModel>,
     noteList: ArrayList<NoteModel>,
     private val onItemClicked: (NoteModel) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), Filterable {
-    private val TAG = "NoteAdapter"
+    companion object {
+        private const val TAG = "NoteAdapter"
+    }
 
     inner class NoteViewHolder(val binding: LayoutNoteBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -40,15 +40,15 @@ class NoteAdapter(
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
 
         with(holder.binding) {
-            with(noteLists[position]) {
+            with(notes[position]) {
                 tvNoteTitle.isVisible = noteTitle.isNotEmpty()
                 tvNoteDescription.isVisible = noteDetails.isNotEmpty()
 
-                holder.binding.note=noteLists[position]
+                holder.binding.note = notes[position]
             }
         }
 
-        when (noteLists[position].importance) {
+        when (notes[position].importance) {
 
             0 -> {
                 with(holder.binding) {
@@ -84,14 +84,14 @@ class NoteAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            Log.d(TAG, "onBindViewHolder: " + noteLists[holder.absoluteAdapterPosition])
-            onItemClicked.invoke(noteLists[holder.absoluteAdapterPosition])
+            Log.d(TAG, "onBindViewHolder: " + notes[holder.absoluteAdapterPosition])
+            onItemClicked.invoke(notes[holder.absoluteAdapterPosition])
         }
 
     }
 
     override fun getItemCount(): Int {
-        return noteLists.size
+        return notes.size
     }
 
     override fun getFilter(): Filter {
@@ -121,8 +121,8 @@ class NoteAdapter(
         }
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            noteLists = results.values as ArrayList<NoteModel>
-            Log.d(TAG, "publishResults: " + noteLists.size)
+            notes = results.values as ArrayList<NoteModel>
+            Log.d(TAG, "publishResults: " + notes.size)
             notifyDataSetChanged()
         }
     }

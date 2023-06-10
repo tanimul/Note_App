@@ -7,8 +7,9 @@ import androidx.appcompat.widget.Toolbar
 import org.tanimul.notes.R
 
 open class AppBaseActivity : AppCompatActivity() {
-
-    private val TAG: String = "AppBaseActivity"
+    companion object {
+        private const val TAG: String = "AppBaseActivity"
+    }
 
     fun setToolbarWithoutBackButton(mToolbar: Toolbar) {
         setSupportActionBar(mToolbar)
@@ -22,7 +23,7 @@ open class AppBaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> onBackPressed()
+            android.R.id.home -> onBackPressedDispatcher.onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }

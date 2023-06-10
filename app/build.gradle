@@ -60,6 +60,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
 
-
+    //RecyclerView Swipe
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+
 }

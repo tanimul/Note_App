@@ -29,17 +29,16 @@ import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
 import org.tanimul.notes.viewmodel.NoteViewModel
 import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class HomeActivity : AppBaseActivity() {
     companion object{
-        private val TAG = "HomeActivity"
+        private const val TAG = "HomeActivity"
     }
     private lateinit var binding: ActivityHomeBinding
     private lateinit var noteViewModel: NoteViewModel
-    private lateinit var noteList: ArrayList<NoteModel>
+    private lateinit var notes: ArrayList<NoteModel>
     private lateinit var noteAdapter: NoteAdapter
     private var optionMenu: Menu? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +56,9 @@ class HomeActivity : AppBaseActivity() {
         title = null
 
         //arrayList initialize
-        noteList = ArrayList<NoteModel>()
+        notes = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(noteList, noteList) {
+        noteAdapter = NoteAdapter(notes, notes) {
             Log.d(TAG, "onItemClick: $it and id is: " + it.id)
             noteActResult.launch(
                 Intent(this, InputActivity::class.java).putExtra(
@@ -164,8 +163,8 @@ class HomeActivity : AppBaseActivity() {
         noteViewModel.showAllNotes.observe(
             this
         ) {
-            noteList.clear()
-            noteList.addAll(it)
+            notes.clear()
+            notes.addAll(it)
             noteAdapter.notifyDataSetChanged()
         }
     }
@@ -224,7 +223,7 @@ class HomeActivity : AppBaseActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                noteViewModel.deleteSingleNote(noteList[viewHolder.adapterPosition])
+                noteViewModel.deleteSingleNote(notes[viewHolder.adapterPosition])
                 noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

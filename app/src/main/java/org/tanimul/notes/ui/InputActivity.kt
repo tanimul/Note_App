@@ -11,29 +11,28 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import org.tanimul.notes.utils.toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.tanimul.notes.R
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.ActivityInputBinding
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
 import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.tanimul.notes.utils.toast
 import org.tanimul.notes.viewmodel.NoteViewModel
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class InputActivity : AppBaseActivity() {
-
-    private val TAG = "InputActivity"
+    companion object{
+        private const val TAG = "InputActivity"
+    }
     private lateinit var binding: ActivityInputBinding
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var existingNoteModel: NoteModel
     private var createdAt: Long = 0L
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInputBinding.inflate(layoutInflater)
