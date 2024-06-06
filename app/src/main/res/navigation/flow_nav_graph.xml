@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="org.tanimul.notes.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_inputFragment"
+            app:destination="@id/inputFragment">
+
+            <argument
+                android:name="noteModel"
+                app:nullable="true"
+                app:argType="org.tanimul.notes.data.model.NoteModel" />
+
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/inputFragment"
+        android:name="org.tanimul.notes.ui.fragments.InputFragment"
+        android:label="fragment_input"
+        tools:layout="@layout/fragment_input">
+        <argument
+            android:name="noteModel"
+            app:nullable="true"
+            app:argType="org.tanimul.notes.data.model.NoteModel" />
+    </fragment>
+
+</navigation>

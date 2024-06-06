@@ -1,71 +1,72 @@
-package org.tanimul.notes.ui
+package org.tanimul.notes.ui.fragments
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Canvas
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.adapter.NoteAdapter
+import org.tanimul.notes.base.BaseFragment
 import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.ActivityHomeBinding
-import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
-import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.tanimul.notes.databinding.FragmentHomeBinding
+import org.tanimul.notes.utils.Constants
 import org.tanimul.notes.viewmodel.NoteViewModel
-import java.io.Serializable
-import java.util.*
 
-
-class HomeActivity : AppBaseActivity() {
-    companion object{
+@AndroidEntryPoint
+class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+    companion object {
         private const val TAG = "HomeActivity"
     }
-    private lateinit var binding: ActivityHomeBinding
-    private lateinit var noteViewModel: NoteViewModel
+
+    private val noteViewModel: NoteViewModel by viewModels()
     private lateinit var notes: ArrayList<NoteModel>
     private lateinit var noteAdapter: NoteAdapter
     private var optionMenu: Menu? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_NoteApp)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): FragmentHomeBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_home, container, false
+    )
 
-        //note viewModel initialize
-        noteViewModel = ViewModelProvider(
-            this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[NoteViewModel::class.java]
+    override fun init() {
 
         //Sett toolbar
-        setToolbarWithoutBackButton(binding.toolbarLayout.toolbar)
-        title = null
+//        setToolbarWithoutBackButton(binding.toolbarLayout.toolbar)
+//        title = null
 
         //arrayList initialize
         notes = ArrayList<NoteModel>()
 
         noteAdapter = NoteAdapter(notes, notes) {
-            Log.d(TAG, "onItemClick: $it and id is: " + it.id)
-            noteActResult.launch(
-                Intent(this, InputActivity::class.java).putExtra(
-                    "noteModel",
-                    it as Serializable
-                )
-            )
+            //  Log.d(HomeActivity.TAG, "onItemClick: $it and id is: " + it.id)
+//            noteActResult.launch(
+//                Intent(requireContext(), InputActivity::class.java).putExtra(
+//                    "noteModel",
+//                    it as Serializable
+//                )
+//            )
+
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInputFragment(it))
         }
 
 
@@ -79,15 +80,18 @@ class HomeActivity : AppBaseActivity() {
 
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
-            val intent = Intent(this, InputActivity::class.java)
-            noteActResult.launch(intent)
+//            val intent = Intent(requireContext(), InputActivity::class.java)
+//            noteActResult.launch(intent)
+
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInputFragment(null))
+
         }
 
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.d(TAG, "onQueryTextChange: $s")
-                noteAdapter.filter.filter(s)
+                //Log.d(HomeActivity.TAG, "onQueryTextChange: $s")
+                ///noteAdapter.filter.filter(s)
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -97,31 +101,31 @@ class HomeActivity : AppBaseActivity() {
 
 
         deleteForSwipe()
-
     }
+
 
     private val noteActResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
             isEmptyNote()
-            Log.d(TAG, "Result Code: " + it.resultCode)
-            if (it.resultCode != RESULT_CANCELED) {
+            //   Log.d(HomeActivity.TAG, "Result Code: " + it.resultCode)
+            if (it.resultCode != AppCompatActivity.RESULT_CANCELED) {
                 val noteModel: NoteModel = it.data?.getSerializableExtra("noteModel") as NoteModel
-                if (it.resultCode == REQUEST_CODE_ADD_NOTE) {
-                    Log.d(TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
+                if (it.resultCode == Constants.REQUEST_CODE_ADD_NOTE) {
+                    //   Log.d(HomeActivity.TAG, "ok Add: " + it.data?.getSerializableExtra("noteModel"))
                     if (it.data != null) {
                         noteViewModel.addSingleNote(noteModel)
                         //toast("Note Saved")
                     }
 
-                } else if (it.resultCode == REQUEST_CODE_EDIT_NOTE) {
-                    Log.d(
-                        TAG,
-                        "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
-                            "existingNoteId", -1
-                        )
-                    )
+                } else if (it.resultCode == Constants.REQUEST_CODE_EDIT_NOTE) {
+//                    Log.d(
+//                        HomeActivity.TAG,
+//                        "ok Edit: " + it.data?.getSerializableExtra("noteModel") + " -> and id is: " + it.data?.getIntExtra(
+//                            "existingNoteId", -1
+//                        )
+//                    )
                     if (it.data != null) {
                         val id = it.data?.getIntExtra("existingNoteId", -1)
                         if (id != null) {
@@ -137,65 +141,66 @@ class HomeActivity : AppBaseActivity() {
         }
 
 
-    @SuppressLint("RestrictedApi")
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (!isEmptyNote()) {
-            val menuInflater = menuInflater
-            menuInflater.inflate(R.menu.top_menu, menu)
-            optionMenu = menu
-            if (menu is MenuBuilder) {
-                menu.setOptionalIconsVisible(true)
-            }
-
-            optionMenu?.findItem(R.id.menu_gridView)?.isVisible =
-                binding.rvNoteList.layoutManager is LinearLayoutManager
-            optionMenu?.findItem(R.id.menu_listView)?.isVisible =
-                binding.rvNoteList.layoutManager is StaggeredGridLayoutManager
-
-            Log.d(TAG, "onCreateOptionsMenu: " + binding.rvNoteList.layoutManager)
-
-        }
-
-        return true
-    }
+//    @SuppressLint("RestrictedApi")
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        if (!isEmptyNote()) {
+//            val menuInflater = menuInflater
+//            menuInflater.inflate(R.menu.top_menu, menu)
+//            optionMenu = menu
+//            if (menu is MenuBuilder) {
+//                menu.setOptionalIconsVisible(true)
+//            }
+//
+//            optionMenu?.findItem(R.id.menu_gridView)?.isVisible =
+//                binding.rvNoteList.layoutManager is LinearLayoutManager
+//            optionMenu?.findItem(R.id.menu_listView)?.isVisible =
+//                binding.rvNoteList.layoutManager is StaggeredGridLayoutManager
+//
+////            Log.d(HomeActivity.TAG, "onCreateOptionsMenu: " + binding.rvNoteList.layoutManager)
+//
+//        }
+//
+//        return true
+//    }
 
     private fun showNotes() {
-        noteViewModel.showAllNotes.observe(
-            this
-        ) {
-            notes.clear()
-            notes.addAll(it)
-            noteAdapter.notifyDataSetChanged()
-        }
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "onOptionsItemSelected: " + item.itemId)
-        when (item.itemId) {
-            R.id.menu_listView -> {
-                binding.rvNoteList.layoutManager = LinearLayoutManager(this)
-            }
-            R.id.menu_gridView -> {
-                binding.rvNoteList.layoutManager =
-                    StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-            }
-            R.id.menu_help -> {
-            }
-
-            R.id.menu_delete -> {
-                //delete Note
-                deleteAll()
-            }
-            R.id.menu_setting -> {
-                // dialog.show()
+        lifecycleScope.launch {
+            noteViewModel.showAllNotes.collectLatest {
+                notes.clear()
+                notes.addAll(it)
+                noteAdapter.notifyDataSetChanged()
             }
         }
-        return super.onOptionsItemSelected(item)
     }
+    //  }
+
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//     //   Log.d(HomeActivity.TAG, "onOptionsItemSelected: " + item.itemId)
+//        when (item.itemId) {
+//            R.id.menu_listView -> {
+//                binding.rvNoteList.layoutManager = LinearLayoutManager(this)
+//            }
+//            R.id.menu_gridView -> {
+//                binding.rvNoteList.layoutManager =
+//                    StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+//            }
+//            R.id.menu_help -> {
+//            }
+//
+//            R.id.menu_delete -> {
+//                //delete Note
+//                deleteAll()
+//            }
+//            R.id.menu_setting -> {
+//                // dialog.show()
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun deleteAll() {
-        AlertDialog.Builder(this@HomeActivity)
+        AlertDialog.Builder(requireContext())
             .setTitle("Delete All")
             .setMessage("Are you sure you want to delete Tasks?")
             .setPositiveButton(
@@ -217,14 +222,14 @@ class HomeActivity : AppBaseActivity() {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                target: RecyclerView.ViewHolder,
             ): Boolean {
                 return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 noteViewModel.deleteSingleNote(notes[viewHolder.adapterPosition])
-                noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                ///noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
 
             override fun onChildDraw(
@@ -234,7 +239,7 @@ class HomeActivity : AppBaseActivity() {
                 dX: Float,
                 dY: Float,
                 actionState: Int,
-                isCurrentlyActive: Boolean
+                isCurrentlyActive: Boolean,
             ) {
                 RecyclerViewSwipeDecorator.Builder(
                     c,
@@ -247,7 +252,7 @@ class HomeActivity : AppBaseActivity() {
                 )
                     .addBackgroundColor(
                         ContextCompat.getColor(
-                            this@HomeActivity,
+                            requireContext(),
                             R.color.colorBackground
                         )
                     )
@@ -268,17 +273,16 @@ class HomeActivity : AppBaseActivity() {
     }
 
     private fun isEmptyNote(): Boolean {
-        invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
         var noNote = true
-        noteViewModel.showAllNotes.observe(
-            this
-        ) {
-            binding.emptyLayout.root.isVisible = it.isEmpty()
-            binding.etSearch.isVisible = it.isNotEmpty()
-            noNote = it.isEmpty()
+        lifecycleScope.launch {
+            noteViewModel.showAllNotes.collectLatest {
+                binding.emptyLayout.root.isVisible = it.isEmpty()
+                binding.etSearch.isVisible = it.isNotEmpty()
+                noNote = it.isEmpty()
+            }
+
         }
         return noNote
     }
-
-
 }

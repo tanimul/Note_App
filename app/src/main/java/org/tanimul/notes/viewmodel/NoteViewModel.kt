@@ -1,26 +1,32 @@
 package org.tanimul.notes.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.tanimul.notes.data.database.NoteDatabase
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.data.repository.NoteRepository
+import javax.inject.Inject
 
-class NoteViewModel(application: Application) : AndroidViewModel(application) {
-    companion object{
-        private const val TAG = "NoteViewModel"
-    }
-    val showAllNotes: LiveData<List<NoteModel>>
+@HiltViewModel
+class NoteViewModel @Inject constructor(
     private val noteRepository: NoteRepository
+) : ViewModel() {
+
+    private var _showAllNotes: MutableStateFlow<List<NoteModel>> =
+        MutableStateFlow(emptyList())
+    val showAllNotes: StateFlow<List<NoteModel>> = _showAllNotes
 
     init {
-        val workDao = NoteDatabase.getDatabase(application).noteDao()
-        noteRepository = NoteRepository(workDao)
-        showAllNotes = noteRepository.showAllNotes
+        viewModelScope.launch {
+            noteRepository.showAllNotes.collect {
+                _showAllNotes.value = it
+            }
+
+        }
     }
 
     fun addSingleNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {

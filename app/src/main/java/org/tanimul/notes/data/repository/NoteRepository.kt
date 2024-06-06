@@ -1,34 +1,32 @@
 package org.tanimul.notes.data.repository
-
-import android.util.Log
 import androidx.lifecycle.LiveData
-import org.tanimul.notes.data.database.NoteDao
+import kotlinx.coroutines.flow.Flow
+import org.tanimul.notes.data.database.NoteDatabase
 import org.tanimul.notes.data.model.NoteModel
+import timber.log.Timber
+import javax.inject.Inject
 
-class NoteRepository(private val noteDao: NoteDao) {
-    companion object {
-        private const val TAG = "NoteRepository"
-    }
+class NoteRepository @Inject constructor(private val roomDatabase: NoteDatabase) {
 
-    var showAllNotes: LiveData<List<NoteModel>> = noteDao.showAllNotes()
+    var showAllNotes: Flow<List<NoteModel>> = roomDatabase.noteDao().showAllNotes()
 
     suspend fun addSingleNote(noteModel: NoteModel) {
-        noteDao.addSingleNote(noteModel)
-        Log.d(TAG, "addSingleNote: ")
+        roomDatabase.noteDao().addSingleNote(noteModel)
+        Timber.d("addSingleNote: ")
     }
 
     suspend fun deleteSingleNote(noteModel: NoteModel) {
-        noteDao.deleteSingleNote(noteModel)
-        Log.d(TAG, "deleteSingleNote: ")
+        roomDatabase.noteDao().deleteSingleNote(noteModel)
+        Timber.d("deleteSingleNote: ")
     }
 
     suspend fun updateExistingNote(noteModel: NoteModel) {
-        noteDao.updateExistingNote(noteModel)
-        Log.d(TAG, "updateExistingNote: ")
+        roomDatabase.noteDao().updateExistingNote(noteModel)
+        Timber.d("updateExistingNote: ")
     }
 
     suspend fun deleteAllNotes() {
-        noteDao.deleteAllNotes()
-        Log.d(TAG, "deleteAllNotes: ")
+        roomDatabase.noteDao().deleteAllNotes()
+        Timber.d("deleteAllNotes: ")
     }
 }

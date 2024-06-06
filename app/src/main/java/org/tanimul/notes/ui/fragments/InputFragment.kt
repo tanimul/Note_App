@@ -1,69 +1,64 @@
-package org.tanimul.notes.ui
+package org.tanimul.notes.ui.fragments
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dagger.hilt.android.AndroidEntryPoint
 import org.tanimul.notes.R
+import org.tanimul.notes.base.BaseFragment
 import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.ActivityInputBinding
-import org.tanimul.notes.utils.Constants.REQUEST_CODE_ADD_NOTE
-import org.tanimul.notes.utils.Constants.REQUEST_CODE_EDIT_NOTE
+import org.tanimul.notes.databinding.FragmentInputBinding
 import org.tanimul.notes.utils.toast
 import org.tanimul.notes.viewmodel.NoteViewModel
-import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.*
 
-class InputActivity : AppBaseActivity() {
-    companion object{
-        private const val TAG = "InputActivity"
-    }
-    private lateinit var binding: ActivityInputBinding
-    private lateinit var noteViewModel: NoteViewModel
+@AndroidEntryPoint
+class InputFragment : BaseFragment<FragmentInputBinding>() {
+
+    private val noteViewModel: NoteViewModel by viewModels()
+    private val args: InputFragmentArgs by navArgs()
+
+
     private lateinit var existingNoteModel: NoteModel
     private var createdAt: Long = 0L
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityInputBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        if (intent.extras != null) {
-            binding.tvNoteTitle.text = getText(R.string.update_note).toString()
-        } else {
-            createdAt = System.currentTimeMillis()
-            binding.tvNoteTitle.text = getText(R.string.add_note).toString()
-            binding.tvDateTime.text =
-                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(Date())
-        }
 
-        if (intent.extras != null) {
-            existingNoteModel = intent.extras?.getSerializable("noteModel") as NoteModel
-            Log.d(TAG, "onCreate: $existingNoteModel")
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): FragmentInputBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_input, container, false
+    )
+
+    override fun init() {
+
+        binding.note = args.noteModel
+
+
+        //test
+
+        if (args.noteModel != null) {
+            existingNoteModel = args.noteModel!!
+//            Log.d(InputActivity.TAG, "onCreate: $existingNoteModel")
             binding.etTitle.setText(existingNoteModel.noteTitle)
             binding.etDescription.setText(existingNoteModel.noteDetails)
             createdAt = existingNoteModel.addedAt
             priorityCode = existingNoteModel.importance
-            binding.tvDateTime.text =
-                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
-                    existingNoteModel.addedAt
-                )
+//            binding.tvDateTime.text =
+//                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
+//                    existingNoteModel.addedAt
+//                )
         }
-
-        //note viewModel initialize
-        noteViewModel = ViewModelProvider(
-            this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[NoteViewModel::class.java]
 
         initMiscellaneous()
 
@@ -77,11 +72,9 @@ class InputActivity : AppBaseActivity() {
     }
 
     private fun saveNote() {
-        if (binding.etTitle.text.toString().isEmpty() && binding.etDescription.text.toString()
-                .isEmpty()
+        if (binding.etTitle.text.toString().isNotEmpty() && binding.etDescription.text.toString()
+                .isNotEmpty()
         ) {
-            Log.d(TAG, "Note saveNote: ")
-        } else {
 
             val noteModel = NoteModel(
                 noteTitle = binding.etTitle.text.toString(),
@@ -90,41 +83,19 @@ class InputActivity : AppBaseActivity() {
                 updatedAt = System.currentTimeMillis(),
                 importance = priorityCode
             )
-            // noteViewModel.addSingleNote(noteModel)
-            val resultIntent = Intent()
 
-            if (intent.extras != null) {
-                resultIntent.putExtra(
-                    "noteModel", noteModel as Serializable
-                )
-                resultIntent.putExtra("existingNoteId", existingNoteModel.id)
-                setResult(
-                    REQUEST_CODE_EDIT_NOTE, resultIntent
-                )
-                Log.d(TAG, "editNote: ")
+            if (args.noteModel != null) noteModel.id = args.noteModel!!.id
+            noteViewModel.addSingleNote(noteModel)
 
-            } else {
-
-                setResult(
-                    REQUEST_CODE_ADD_NOTE,
-                    resultIntent.putExtra("noteModel", noteModel as Serializable)
-                )
-                Log.d(TAG, "addNote: ")
-            }
 
         }
-
-        finish()
+        findNavController().popBackStack()
     }
 
-    override fun onBackPressed() {
-        saveNote()
-        super.onBackPressed()
-    }
 
     private fun initMiscellaneous() {
         val bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-        val miscellaneous: LinearLayout = findViewById(R.id.miscellaneous)
+        val miscellaneous: LinearLayout = binding.layoutMiscellaneous.root
         bottomSheetBehavior = BottomSheetBehavior.from(miscellaneous)
         miscellaneous.setOnClickListener {
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -143,11 +114,13 @@ class InputActivity : AppBaseActivity() {
                 binding.rootLayout.setBackgroundResource(R.color.colorBackground1)
                 setStatusBarColor(R.color.colorBackground1)
             }
+
             1 -> {
                 imageColor2.setImageResource(R.drawable.done_vector)
                 binding.rootLayout.setBackgroundResource(R.color.colorBackground2)
                 setStatusBarColor(R.color.colorBackground2)
             }
+
             2 -> {
                 imageColor3.setImageResource(R.drawable.done_vector)
                 binding.rootLayout.setBackgroundResource(R.color.colorBackground3)
@@ -181,7 +154,7 @@ class InputActivity : AppBaseActivity() {
         }
 
 
-        if (intent.extras != null) {
+        if (activity?.intent?.extras != null) {
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote).visibility = View.VISIBLE
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote)
                 .setOnClickListener {
@@ -193,7 +166,7 @@ class InputActivity : AppBaseActivity() {
 
     private fun showDeleteDialog() {
         if (dialogDeleteNote == null) {
-            val builder = AlertDialog.Builder(this@InputActivity)
+            val builder = AlertDialog.Builder(requireContext())
             val view: View = layoutInflater.inflate(R.layout.layout_delete_note, null)
             builder.setView(view)
             dialogDeleteNote = builder.create()
@@ -203,8 +176,8 @@ class InputActivity : AppBaseActivity() {
             view.findViewById<View>(R.id.textDeleteNote).setOnClickListener {
                 noteViewModel.deleteSingleNote(existingNoteModel)
                 dialogDeleteNote!!.dismiss()
-                toast("Note deleted successfully")
-                finish()
+                activity?.toast("Note deleted successfully")
+                findNavController().popBackStack()
             }
             view.findViewById<View>(R.id.textCancel)
                 .setOnClickListener { dialogDeleteNote!!.dismiss() }
@@ -213,9 +186,9 @@ class InputActivity : AppBaseActivity() {
     }
 
     private fun setStatusBarColor(colorCode: Int) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(this, colorCode)
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//        window.statusBarColor = ContextCompat.getColor(this, colorCode)
     }
-}
 
+}
