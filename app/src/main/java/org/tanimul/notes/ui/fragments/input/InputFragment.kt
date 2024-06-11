@@ -1,37 +1,34 @@
-package org.tanimul.notes.ui.fragments
+package org.tanimul.notes.ui.fragments.input
 
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import org.tanimul.notes.R
 import org.tanimul.notes.base.BaseFragment
 import org.tanimul.notes.data.model.NoteModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
+import android.view.View
+import android.graphics.drawable.ColorDrawable
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import org.tanimul.notes.databinding.FragmentInputBinding
 import org.tanimul.notes.utils.toast
-import org.tanimul.notes.viewmodel.NoteViewModel
+import org.tanimul.notes.ui.fragments.input.InputViewModel
 
 @AndroidEntryPoint
 class InputFragment : BaseFragment<FragmentInputBinding>() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val noteViewModel: InputViewModel by viewModels()
     private val args: InputFragmentArgs by navArgs()
-
-
-    private lateinit var existingNoteModel: NoteModel
-    private var createdAt: Long = 0L
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
-
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -42,51 +39,39 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
 
     override fun init() {
 
-        binding.note = args.noteModel
+        binding.apply {
+            note = args.noteModel
+            ivSaveNote.setOnClickListener {
+                saveNote()
+            }
+            icBack.setOnClickListener {
+                saveNote()
+            }
 
-
-        //test
-
-        if (args.noteModel != null) {
-            existingNoteModel = args.noteModel!!
-//            Log.d(InputActivity.TAG, "onCreate: $existingNoteModel")
-            binding.etTitle.setText(existingNoteModel.noteTitle)
-            binding.etDescription.setText(existingNoteModel.noteDetails)
-            createdAt = existingNoteModel.addedAt
-            priorityCode = existingNoteModel.importance
-//            binding.tvDateTime.text =
-//                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
-//                    existingNoteModel.addedAt
-//                )
         }
 
         initMiscellaneous()
-
-        binding.ivSaveNote.setOnClickListener {
-            saveNote()
-        }
-
-        binding.icBack.setOnClickListener {
-            saveNote()
-        }
     }
 
     private fun saveNote() {
-        if (binding.etTitle.text.toString().isNotEmpty() && binding.etDescription.text.toString()
+        if (binding.etTitle.text.toString().isNotEmpty() || binding.etDescription.text.toString()
                 .isNotEmpty()
         ) {
 
             val noteModel = NoteModel(
                 noteTitle = binding.etTitle.text.toString(),
                 noteDetails = binding.etDescription.text.toString(),
-                addedAt = createdAt,
+                addedAt = args.noteModel?.addedAt ?: System.currentTimeMillis(),
                 updatedAt = System.currentTimeMillis(),
                 importance = priorityCode
             )
 
-            if (args.noteModel != null) noteModel.id = args.noteModel!!.id
-            noteViewModel.addSingleNote(noteModel)
-
+            if (args.noteModel != null) {
+                noteModel.id = args.noteModel!!.id
+                noteViewModel.updateExistingNote(noteModel)
+            } else {
+                noteViewModel.addSingleNote(noteModel)
+            }
 
         }
         findNavController().popBackStack()
@@ -94,6 +79,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
 
 
     private fun initMiscellaneous() {
+        priorityCode = args.noteModel?.importance ?: 0
         val bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
         val miscellaneous: LinearLayout = binding.layoutMiscellaneous.root
         bottomSheetBehavior = BottomSheetBehavior.from(miscellaneous)
@@ -154,7 +140,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
         }
 
 
-        if (activity?.intent?.extras != null) {
+        if (args.noteModel != null) {
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote).visibility = View.VISIBLE
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote)
                 .setOnClickListener {
@@ -174,7 +160,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
                 dialogDeleteNote!!.window!!.setBackgroundDrawable(ColorDrawable(0))
             }
             view.findViewById<View>(R.id.textDeleteNote).setOnClickListener {
-                noteViewModel.deleteSingleNote(existingNoteModel)
+                args.noteModel?.let { it1 -> noteViewModel.deleteSingleNote(it1) }
                 dialogDeleteNote!!.dismiss()
                 activity?.toast("Note deleted successfully")
                 findNavController().popBackStack()
@@ -186,9 +172,9 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     }
 
     private fun setStatusBarColor(colorCode: Int) {
-//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//        window.statusBarColor = ContextCompat.getColor(this, colorCode)
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), colorCode)
     }
 
 }

@@ -1,4 +1,4 @@
-package org.tanimul.notes.viewmodel
+package org.tanimul.notes.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,12 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.data.repository.NoteRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(
-    private val noteRepository: NoteRepository
+class HomeViewModel @Inject constructor(
+    private val noteRepository: HomeRepository
 ) : ViewModel() {
 
     private var _showAllNotes: MutableStateFlow<List<NoteModel>> =
@@ -27,14 +26,6 @@ class NoteViewModel @Inject constructor(
             }
 
         }
-    }
-
-    fun addSingleNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.addSingleNote(note)
-    }
-
-    fun updateExistingNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.updateExistingNote(note)
     }
 
     fun deleteSingleNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {

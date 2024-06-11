@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="org.tanimul.notes.ui.fragments.HomeFragment"
+        android:name="org.tanimul.notes.ui.fragments.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/inputFragment"
-        android:name="org.tanimul.notes.ui.fragments.InputFragment"
+        android:name="org.tanimul.notes.ui.fragments.input.InputFragment"
         android:label="fragment_input"
         tools:layout="@layout/fragment_input">
         <argument
