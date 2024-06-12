@@ -10,11 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragments.HomeFragment">
-
-        <include
-            android:id="@+id/toolbar_layout"
-            layout="@layout/layout_toolbar" />
+        tools:context=".ui.fragments.home.HomeFragment">
 
         <EditText
             android:id="@+id/et_search"
@@ -46,14 +42,13 @@
             app:layout_constraintStart_toEndOf="@+id/et_search"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_noteList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
+            app:layout_constraintTop_toBottomOf="@id/et_search"
             app:spanCount="2"
             tools:listitem="@layout/layout_note" />
 

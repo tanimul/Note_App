@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
-        tools:context=".ui.fragments.InputFragment">
+        tools:context=".ui.fragments.input.InputFragment">
 
 
         <ScrollView
@@ -117,6 +117,7 @@
                     android:includeFontPadding="false"
                     android:inputType="textMultiLine"
                     android:minHeight="100dp"
+                    android:text="@{note.noteDetails}"
                     android:textColor="@color/colorTextLight"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
