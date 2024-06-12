@@ -108,8 +108,8 @@ class NoteAdapter(
                 val searchStr = constSeq.toString().uppercase()
                 val resultsData: MutableList<NoteModel> = ArrayList()
                 for (noteInfo in noteList) {
-                    if (noteInfo.noteTitle.uppercase()
-                            .contains(searchStr)
+                    if (noteInfo.noteTitle?.uppercase()
+                            ?.contains(searchStr) == true
                     ) resultsData.add(noteInfo)
                 }
                 results.count = resultsData.size

@@ -3,6 +3,7 @@ package org.tanimul.notes.base
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import org.tanimul.notes.R
 
 abstract class BaseActivity<E: ViewBinding> : AppCompatActivity(){
 
@@ -12,7 +13,8 @@ abstract class BaseActivity<E: ViewBinding> : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = getViewBinding();
+        _binding = getViewBinding()
+        setTheme(R.style.Theme_NoteApp)
         setContentView(_binding!!.root)
         init(savedInstanceState)
     }

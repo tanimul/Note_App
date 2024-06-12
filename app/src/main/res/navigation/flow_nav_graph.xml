@@ -16,8 +16,8 @@
 
             <argument
                 android:name="noteModel"
-                app:nullable="true"
-                app:argType="org.tanimul.notes.data.model.NoteModel" />
+                app:argType="org.tanimul.notes.data.model.NoteModel"
+                app:nullable="true" />
 
         </action>
     </fragment>
@@ -29,8 +29,8 @@
         tools:layout="@layout/fragment_input">
         <argument
             android:name="noteModel"
-            app:nullable="true"
-            app:argType="org.tanimul.notes.data.model.NoteModel" />
+            app:argType="org.tanimul.notes.data.model.NoteModel"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

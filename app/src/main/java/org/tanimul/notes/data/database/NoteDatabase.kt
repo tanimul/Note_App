@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.tanimul.notes.data.model.NoteModel
 
-@Database(entities = [NoteModel::class], version = 2, exportSchema = false)
+@Database(entities = [NoteModel::class], version = 3, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao

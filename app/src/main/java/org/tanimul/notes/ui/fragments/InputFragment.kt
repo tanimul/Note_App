@@ -4,9 +4,11 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,9 +28,6 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     private val noteViewModel: NoteViewModel by viewModels()
     private val args: InputFragmentArgs by navArgs()
 
-
-    private lateinit var existingNoteModel: NoteModel
-    private var createdAt: Long = 0L
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
 
@@ -44,21 +43,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
 
         binding.note = args.noteModel
 
-
-        //test
-
-        if (args.noteModel != null) {
-            existingNoteModel = args.noteModel!!
-//            Log.d(InputActivity.TAG, "onCreate: $existingNoteModel")
-            binding.etTitle.setText(existingNoteModel.noteTitle)
-            binding.etDescription.setText(existingNoteModel.noteDetails)
-            createdAt = existingNoteModel.addedAt
-            priorityCode = existingNoteModel.importance
-//            binding.tvDateTime.text =
-//                SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault()).format(
-//                    existingNoteModel.addedAt
-//                )
-        }
+        args.noteModel?.let { priorityCode = it.importance }
 
         initMiscellaneous()
 
@@ -72,20 +57,22 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     }
 
     private fun saveNote() {
-        if (binding.etTitle.text.toString().isNotEmpty() && binding.etDescription.text.toString()
+        if (binding.etTitle.text.toString().isNotEmpty() || binding.etDescription.text.toString()
                 .isNotEmpty()
         ) {
 
             val noteModel = NoteModel(
                 noteTitle = binding.etTitle.text.toString(),
                 noteDetails = binding.etDescription.text.toString(),
-                addedAt = createdAt,
                 updatedAt = System.currentTimeMillis(),
                 importance = priorityCode
             )
-
-            if (args.noteModel != null) noteModel.id = args.noteModel!!.id
-            noteViewModel.addSingleNote(noteModel)
+            if (args.noteModel != null) {
+                noteModel.id = args.noteModel!!.id
+                noteViewModel.updateExistingNote(noteModel)
+            } else {
+                noteViewModel.addSingleNote(noteModel)
+            }
 
 
         }
@@ -154,7 +141,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
         }
 
 
-        if (activity?.intent?.extras != null) {
+        if (args.noteModel != null) {
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote).visibility = View.VISIBLE
             miscellaneous.findViewById<View>(R.id.layoutDeleteNote)
                 .setOnClickListener {
@@ -174,7 +161,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
                 dialogDeleteNote!!.window!!.setBackgroundDrawable(ColorDrawable(0))
             }
             view.findViewById<View>(R.id.textDeleteNote).setOnClickListener {
-                noteViewModel.deleteSingleNote(existingNoteModel)
+                args.noteModel?.let { it1 -> noteViewModel.deleteSingleNote(it1) }
                 dialogDeleteNote!!.dismiss()
                 activity?.toast("Note deleted successfully")
                 findNavController().popBackStack()
@@ -186,9 +173,11 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     }
 
     private fun setStatusBarColor(colorCode: Int) {
-//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//        window.statusBarColor = ContextCompat.getColor(this, colorCode)
+        activity?.window?.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = ContextCompat.getColor(requireContext(), colorCode)
+        }
     }
 
 }
