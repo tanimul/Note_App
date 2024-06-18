@@ -4,15 +4,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @Entity(tableName = "Note")
 data class NoteModel(
     val noteTitle: String,
     val noteDetails: String,
-    val addedAt: Long,
-    val updatedAt: Long,
-    val importance: Int
+    val addedAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long? = null,
+    val importance: Int = 0,
 ) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -27,6 +28,7 @@ data class NoteModel(
             formattedDate -> SimpleDateFormat(
                 "hh:mm a", Locale.getDefault()
             ).format(updatedAt)
+
             else -> SimpleDateFormat(
                 "MMMM dd, yyyy", Locale.getDefault()
             ).format(updatedAt)
