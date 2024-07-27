@@ -8,19 +8,19 @@ import org.tanimul.notes.data.model.NoteModel
 interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSingleNote(noteModel: NoteModel) //Add single note
+    suspend fun addNote(noteModel: NoteModel)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateExistingNote(noteModel: NoteModel) //update single note
+    suspend fun updateNote(noteModel: NoteModel)
 
     @Delete
-    suspend fun deleteSingleNote(noteModel: NoteModel) //delete single note
+    suspend fun deleteNote(noteModel: NoteModel)
 
     @Query("DELETE FROM Note")
-    suspend fun deleteAllNotes() //delete all notes
+    suspend fun deleteNotes()
 
     @Query("SELECT * FROM Note ORDER BY id DESC")
-    fun showAllNotes(): Flow<List<NoteModel>> //showing all notes
+    fun showNotes(): Flow<List<NoteModel>>
 
 
 }

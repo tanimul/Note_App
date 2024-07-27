@@ -1,4 +1,4 @@
-package org.tanimul.notes.ui.fragments
+package org.tanimul.notes.ui.fragments.notes
 
 import android.app.AlertDialog
 import android.graphics.Canvas
@@ -6,7 +6,6 @@ import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -31,12 +30,11 @@ import org.tanimul.notes.adapter.NoteAdapter
 import org.tanimul.notes.base.BaseFragment
 import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.databinding.FragmentHomeBinding
-import org.tanimul.notes.viewmodel.NoteViewModel
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val noteViewModel: HomeViewModel by viewModels()
     private lateinit var notes: ArrayList<NoteModel>
     private lateinit var noteAdapter: NoteAdapter
 
@@ -106,12 +104,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun showNotes() {
         lifecycleScope.launch {
-            noteViewModel.showAllNotes.collectLatest {
-                notes.clear()
-                notes.addAll(it)
-                binding.emptyLayout.root.isVisible = it.isEmpty()
-                binding.etSearch.isVisible = it.isNotEmpty()
-                noteAdapter.notifyDataSetChanged()
+            noteViewModel.fetchNotes.collectLatest {
+                it?.let {
+                    notes.clear()
+                    notes.addAll(it)
+                    binding.emptyLayout.root.isVisible = it.isEmpty()
+                    binding.etSearch.isVisible = it.isNotEmpty()
+                    noteAdapter.notifyDataSetChanged()
+                }
+
             }
         }
     }

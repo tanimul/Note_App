@@ -1,5 +1,4 @@
-package org.tanimul.notes.ui.fragments.home
-import androidx.lifecycle.LiveData
+package org.tanimul.notes.ui.fragments.notes
 import kotlinx.coroutines.flow.Flow
 import org.tanimul.notes.data.database.NoteDatabase
 import org.tanimul.notes.data.model.NoteModel
@@ -8,15 +7,15 @@ import javax.inject.Inject
 
 class HomeRepository @Inject constructor(private val roomDatabase: NoteDatabase) {
 
-    var showAllNotes: Flow<List<NoteModel>> = roomDatabase.noteDao().showAllNotes()
+    var showAllNotes: Flow<List<NoteModel>> = roomDatabase.noteDao().showNotes()
 
     suspend fun deleteSingleNote(noteModel: NoteModel) {
-        roomDatabase.noteDao().deleteSingleNote(noteModel)
+        roomDatabase.noteDao().deleteNote(noteModel)
         Timber.d("deleteSingleNote: ")
     }
 
     suspend fun deleteAllNotes() {
-        roomDatabase.noteDao().deleteAllNotes()
+        roomDatabase.noteDao().deleteNotes()
         Timber.d("deleteAllNotes: ")
     }
 }
