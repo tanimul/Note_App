@@ -11,11 +11,10 @@ import org.tanimul.notes.data.model.NoteModel
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.AddNoteUseCase
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.DeleteNoteUseCase
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.UpdateNoteUseCase
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class InputViewModel @Inject constructor(
+class EditorViewModel @Inject constructor(
     private val addNoteUseCase: AddNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase
@@ -28,11 +27,6 @@ class InputViewModel @Inject constructor(
         _uiAction.trySend(actions)
     }
 
-    fun navigateBack() {
-        Timber.d("fmoawefawfomwa")
-        _uiAction.trySend(InputUiActions.NavigateBack)
-    }
-
     fun addNote(noteModel: NoteModel) {
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase(noteModel)
@@ -40,12 +34,6 @@ class InputViewModel @Inject constructor(
     }
 
     fun deleteNote(noteModel: NoteModel) {
-     /*   _uiAction.trySend(
-            InputUiActions.DeleteNote(
-                noteModel
-            )
-        )*/
-
         viewModelScope.launch(Dispatchers.IO) {
             deleteNoteUseCase(noteModel)
         }
@@ -61,9 +49,6 @@ class InputViewModel @Inject constructor(
 sealed interface InputUiActions {
     data object NavigateBack : InputUiActions
     data object AddNote : InputUiActions
-//    data class AddNote(val note: NoteModel) : InputUiActions
     data object DeleteNote : InputUiActions
-//    data class DeleteNote(val note: NoteModel) : InputUiActions
     data object UpdateNote : InputUiActions
-//    data class UpdateNote(val note: NoteModel) : InputUiActions
 }

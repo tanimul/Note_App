@@ -1,4 +1,4 @@
-package org.tanimul.notes.ui.fragments.notes
+package org.tanimul.notes.ui.fragments.notes.presentation
 
 import android.app.AlertDialog
 import android.graphics.Canvas
@@ -151,7 +151,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             .setMessage("Are you sure you want to delete Tasks?")
             .setPositiveButton(
                 "OK"
-            ) { _, _ -> noteViewModel.deleteAllNotes() }
+            ) { _, _ -> noteViewModel.deleteNotes() }
             .setNegativeButton(
                 "CANCEL"
             ) { dialog, _ -> dialog.dismiss() }
@@ -174,7 +174,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                noteViewModel.deleteSingleNote(notes[viewHolder.adapterPosition])
+                noteViewModel.deleteNote(notes[viewHolder.adapterPosition])
                 ///noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

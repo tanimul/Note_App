@@ -2,9 +2,7 @@ package org.tanimul.notes.ui.fragments.editor.data
 
 import org.tanimul.notes.data.database.NoteDatabase
 import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.ui.fragments.editor.domain.repository.AddNoteRepository
 import org.tanimul.notes.ui.fragments.editor.domain.repository.EditorRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class EditorRepositoryImpl @Inject constructor(private val roomDatabase: NoteDatabase) :

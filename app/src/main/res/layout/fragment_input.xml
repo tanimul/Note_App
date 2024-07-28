@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="org.tanimul.notes.ui.fragments.editor.presentation.InputViewModel" />
+            type="org.tanimul.notes.ui.fragments.editor.presentation.EditorViewModel" />
 
         <import type="org.tanimul.notes.ui.fragments.editor.presentation.InputUiActions" />
 

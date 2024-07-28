@@ -27,7 +27,7 @@ import org.tanimul.notes.utils.toast
 @AndroidEntryPoint
 class InputFragment : BaseFragment<FragmentInputBinding>() {
 
-    private val noteViewModel: InputViewModel by viewModels()
+    private val editorViewModel: EditorViewModel by viewModels()
     private val args: InputFragmentArgs by navArgs()
 
     private var priorityCode = 0
@@ -43,24 +43,18 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
 
     override fun init() {
 
-        binding.note = args.noteModel
-        binding.viewModel = noteViewModel
+        binding.apply {
+            note = args.noteModel
+            viewModel = editorViewModel
+        }
 
         args.noteModel?.let { priorityCode = it.importance }
 
         initMiscellaneous()
 
-        binding.ivSaveNote.setOnClickListener {
-            saveNote()
-        }
-
-        /*binding.icBack.setOnClickListener {
-            saveNote()
-        }
-*/
         lifecycleScope.launch {
             launch {
-                noteViewModel.uiAction.collectLatest {
+                editorViewModel.uiAction.collectLatest {
                     when (it) {
                         is InputUiActions.AddNote -> saveNote()
                         is InputUiActions.DeleteNote -> {}
@@ -85,9 +79,9 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
             )
             if (args.noteModel != null) {
                 noteModel.id = args.noteModel!!.id
-                 noteViewModel.updateNote(noteModel)
+                 editorViewModel.updateNote(noteModel)
             } else {
-                  noteViewModel.addNote(noteModel)
+                  editorViewModel.addNote(noteModel)
             }
 
 
