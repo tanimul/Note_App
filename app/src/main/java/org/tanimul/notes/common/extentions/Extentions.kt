@@ -1,4 +1,4 @@
-package org.tanimul.notes.utils
+package org.tanimul.notes.common.extentions
 
 import android.content.Context
 import android.widget.Toast

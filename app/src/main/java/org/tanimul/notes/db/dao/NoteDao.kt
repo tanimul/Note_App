@@ -1,8 +1,13 @@
-package org.tanimul.notes.data.database
+package org.tanimul.notes.db.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
 
 @Dao
 interface NoteDao {
@@ -21,6 +26,5 @@ interface NoteDao {
 
     @Query("SELECT * FROM Note ORDER BY id DESC")
     fun showNotes(): Flow<List<NoteModel>>
-
 
 }

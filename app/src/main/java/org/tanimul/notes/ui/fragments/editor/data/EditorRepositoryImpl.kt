@@ -1,7 +1,7 @@
 package org.tanimul.notes.ui.fragments.editor.data
 
-import org.tanimul.notes.data.database.NoteDatabase
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.db.NoteDatabase
 import org.tanimul.notes.ui.fragments.editor.domain.repository.EditorRepository
 import javax.inject.Inject
 

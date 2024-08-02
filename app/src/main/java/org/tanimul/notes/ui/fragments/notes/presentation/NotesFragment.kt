@@ -28,29 +28,31 @@ import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.adapter.NoteAdapter
 import org.tanimul.notes.base.BaseFragment
-import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.FragmentHomeBinding
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.databinding.FragmentNotesBinding
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+class NotesFragment : BaseFragment<FragmentNotesBinding>() {
 
-    private val noteViewModel: HomeViewModel by viewModels()
+    private val notesViewModel: NotesViewModel by viewModels()
     private lateinit var notes: ArrayList<NoteModel>
     private lateinit var noteAdapter: NoteAdapter
 
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ): FragmentHomeBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_home, container, false
+    ): FragmentNotesBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_notes, container, false
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun init() {
         notes = ArrayList<NoteModel>()
 
+       // binding.viewModel=notesViewModel
+
         noteAdapter = NoteAdapter(notes, notes) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInputFragment(it))
+            findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToInputFragment(it))
         }
 
 
@@ -64,7 +66,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToInputFragment(
+                NotesFragmentDirections.actionNotesFragmentToInputFragment(
                     null
                 )
             )
@@ -104,7 +106,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun showNotes() {
         lifecycleScope.launch {
-            noteViewModel.fetchNotes.collectLatest {
+            notesViewModel.fetchNotes.collectLatest {
                 it?.let {
                     notes.clear()
                     notes.addAll(it)
@@ -151,7 +153,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             .setMessage("Are you sure you want to delete Tasks?")
             .setPositiveButton(
                 "OK"
-            ) { _, _ -> noteViewModel.deleteNotes() }
+            ) { _, _ -> notesViewModel.deleteNotes() }
             .setNegativeButton(
                 "CANCEL"
             ) { dialog, _ -> dialog.dismiss() }
@@ -174,7 +176,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                noteViewModel.deleteNote(notes[viewHolder.adapterPosition])
+                notesViewModel.deleteNote(notes[viewHolder.adapterPosition])
                 ///noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

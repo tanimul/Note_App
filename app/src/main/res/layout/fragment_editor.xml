@@ -7,7 +7,7 @@
 
         <variable
             name="note"
-            type="org.tanimul.notes.data.model.NoteModel" />
+            type="org.tanimul.notes.common.domain.model.NoteModel" />
 
         <variable
             name="viewModel"

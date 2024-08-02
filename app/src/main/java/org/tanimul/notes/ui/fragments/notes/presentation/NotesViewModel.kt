@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
 import org.tanimul.notes.ui.fragments.notes.domain.usecase.DeleteNoteUseCase
 import org.tanimul.notes.ui.fragments.notes.domain.usecase.DeleteNotesUseCase
 import org.tanimul.notes.ui.fragments.notes.domain.usecase.NotesUseCase
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
-class HomeViewModel @Inject constructor(
+class NotesViewModel @Inject constructor(
     private val notesUseCase: NotesUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val deleteNotesUseCase: DeleteNotesUseCase

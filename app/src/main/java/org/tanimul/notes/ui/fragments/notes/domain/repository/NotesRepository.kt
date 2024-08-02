@@ -1,7 +1,7 @@
 package org.tanimul.notes.ui.fragments.notes.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
 
 interface NotesRepository {
 

@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.tanimul.notes.data.database.NoteDatabase
+import org.tanimul.notes.db.NoteDatabase
 import org.tanimul.notes.ui.fragments.editor.data.EditorRepositoryImpl
 import org.tanimul.notes.ui.fragments.editor.domain.repository.EditorRepository
 import org.tanimul.notes.ui.fragments.notes.data.NotesRepositoryImpl

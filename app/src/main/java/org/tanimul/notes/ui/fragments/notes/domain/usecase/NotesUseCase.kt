@@ -1,7 +1,7 @@
 package org.tanimul.notes.ui.fragments.notes.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
 import org.tanimul.notes.ui.fragments.notes.domain.repository.NotesRepository
 import javax.inject.Inject
 

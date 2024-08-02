@@ -20,15 +20,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.base.BaseFragment
-import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.FragmentInputBinding
-import org.tanimul.notes.utils.toast
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.common.extentions.toast
+import org.tanimul.notes.databinding.FragmentEditorBinding
 
 @AndroidEntryPoint
-class InputFragment : BaseFragment<FragmentInputBinding>() {
+class EditorFragment : BaseFragment<FragmentEditorBinding>() {
 
     private val editorViewModel: EditorViewModel by viewModels()
-    private val args: InputFragmentArgs by navArgs()
+    private val args: EditorFragmentArgs by navArgs()
 
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
@@ -37,8 +37,8 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ): FragmentInputBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_input, container, false
+    ): FragmentEditorBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_editor, container, false
     )
 
     override fun init() {
@@ -79,9 +79,9 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
             )
             if (args.noteModel != null) {
                 noteModel.id = args.noteModel!!.id
-                 editorViewModel.updateNote(noteModel)
+                editorViewModel.updateNote(noteModel)
             } else {
-                  editorViewModel.addNote(noteModel)
+                editorViewModel.addNote(noteModel)
             }
 
 

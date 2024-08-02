@@ -1,4 +1,4 @@
-package org.tanimul.notes.data.model
+package org.tanimul.notes.common.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

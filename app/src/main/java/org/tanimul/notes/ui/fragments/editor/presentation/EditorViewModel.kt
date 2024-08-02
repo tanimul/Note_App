@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.AddNoteUseCase
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.DeleteNoteUseCase
 import org.tanimul.notes.ui.fragments.editor.domain.usecase.UpdateNoteUseCase
