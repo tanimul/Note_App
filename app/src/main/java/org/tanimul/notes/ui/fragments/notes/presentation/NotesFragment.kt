@@ -36,7 +36,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
 
     private val notesViewModel: NotesViewModel by viewModels()
     private lateinit var notes: ArrayList<NoteModel>
-    private lateinit var noteAdapter: NoteAdapter
+   // private lateinit var noteAdapter: NoteAdapter
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -49,17 +49,17 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
     override fun init() {
         notes = ArrayList<NoteModel>()
 
-       // binding.viewModel=notesViewModel
+        binding.viewModel=notesViewModel
 
-        noteAdapter = NoteAdapter(notes, notes) {
+       /* noteAdapter = NoteAdapter(notes, notes) {
             findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToInputFragment(it))
-        }
+        }*/
 
 
         //recyclerView
         binding.rvNoteList.layoutManager =
             StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-        binding.rvNoteList.adapter = noteAdapter
+       // binding.rvNoteList.adapter = noteAdapter
 
         showNotes()
 
@@ -112,7 +112,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
                     notes.addAll(it)
                     binding.emptyLayout.root.isVisible = it.isEmpty()
                     binding.etSearch.isVisible = it.isNotEmpty()
-                    noteAdapter.notifyDataSetChanged()
+                    //noteAdapter.notifyDataSetChanged()
                 }
 
             }

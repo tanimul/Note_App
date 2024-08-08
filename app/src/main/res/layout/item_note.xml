@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="note"
             type="org.tanimul.notes.common.domain.model.NoteModel" />
+        <variable
+            name="viewModel"
+            type="org.tanimul.notes.ui.fragments.notes.presentation.NotesViewModel" />
 
     </data>
 
@@ -40,6 +44,7 @@
                 android:text="@{note.noteTitle}"
                 android:textColor="@color/colorTextDark"
                 android:textSize="20sp"
+                tools:text="@string/note_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +57,7 @@
                 android:text="@{note.noteDetails}"
                 android:textColor="@color/colorTextLight"
                 android:textSize="14sp"
+                tools:text="@string/note_description"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_noteTitle" />
 
@@ -62,6 +68,7 @@
                 android:layout_marginTop="5dp"
                 android:text="@{note.dateFormatted}"
                 android:textSize="12sp"
+                tools:text="@string/note_day"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_noteDescription" />
 
