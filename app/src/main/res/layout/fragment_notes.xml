@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="org.tanimul.notes.ui.fragments.notes.presentation.NotesViewModel" />
+
+        <import type="org.tanimul.notes.ui.fragments.notes.presentation.NotesUiActions" />
 
     </data>
 
@@ -50,7 +55,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_search"
             app:spanCount="2"
-            tools:listitem="@layout/layout_note" />
+            bindNotes="@{viewModel.displayNotes}"
+            bindViewModel="@{viewModel}"
+            tools:listitem="@layout/item_note" />
 
         <include
             android:id="@+id/empty_layout"

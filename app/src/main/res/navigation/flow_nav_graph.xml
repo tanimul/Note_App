@@ -3,33 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/notesFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="org.tanimul.notes.ui.fragments.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home">
+        android:id="@+id/notesFragment"
+        android:name="org.tanimul.notes.ui.fragments.notes.presentation.NotesFragment"
+        android:label="fragment_notes"
+        tools:layout="@layout/fragment_notes">
         <action
-            android:id="@+id/action_homeFragment_to_inputFragment"
-            app:destination="@id/inputFragment">
+            android:id="@+id/action_notesFragment_to_inputFragment"
+            app:destination="@id/editorFragment">
 
             <argument
                 android:name="noteModel"
-                app:argType="org.tanimul.notes.data.model.NoteModel"
+                app:argType="org.tanimul.notes.common.domain.model.NoteModel"
                 app:nullable="true" />
 
         </action>
     </fragment>
 
     <fragment
-        android:id="@+id/inputFragment"
-        android:name="org.tanimul.notes.ui.fragments.input.InputFragment"
-        android:label="fragment_input"
-        tools:layout="@layout/fragment_input">
+        android:id="@+id/editorFragment"
+        android:name="org.tanimul.notes.ui.fragments.editor.presentation.EditorFragment"
+        android:label="fragment_editor"
+        tools:layout="@layout/fragment_editor">
         <argument
             android:name="noteModel"
-            app:argType="org.tanimul.notes.data.model.NoteModel"
+            app:argType="org.tanimul.notes.common.domain.model.NoteModel"
             app:nullable="true" />
     </fragment>
 

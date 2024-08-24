@@ -7,7 +7,13 @@
 
         <variable
             name="note"
-            type="org.tanimul.notes.data.model.NoteModel" />
+            type="org.tanimul.notes.common.domain.model.NoteModel" />
+
+        <variable
+            name="viewModel"
+            type="org.tanimul.notes.ui.fragments.editor.presentation.EditorViewModel" />
+
+        <import type="org.tanimul.notes.ui.fragments.editor.presentation.InputUiActions" />
 
     </data>
 
@@ -16,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
-        tools:context=".ui.fragments.input.InputFragment">
+        tools:context=".ui.fragments.input.presentation.InputFragment">
 
 
         <ScrollView
@@ -38,6 +44,7 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/background_action_button"
+                    android:onClick="@{()->viewModel.uiActions(InputUiActions.NavigateBack.INSTANCE)}"
                     android:padding="10dp"
                     android:src="@drawable/ic_back"
                     app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +64,6 @@
                     app:layout_constraintStart_toEndOf="@+id/ic_back"
                     app:layout_constraintTop_toTopOf="@+id/iv_save_note" />
 
-
                 <ImageView
                     android:id="@+id/iv_save_note"
                     android:layout_width="40dp"
@@ -65,13 +71,13 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/background_action_button"
+                    android:onClick="@{()->note != null ? viewModel.uiActions(InputUiActions.UpdateNote.INSTANCE) : viewModel.uiActions(InputUiActions.AddNote.INSTANCE)}"
                     android:padding="10dp"
                     android:src="@drawable/done_vector"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/colorTextDark"
                     tools:ignore="ContentDescription" />
-
 
                 <EditText
                     android:id="@+id/et_title"
@@ -81,16 +87,17 @@
                     android:layout_marginTop="20dp"
                     android:background="@null"
                     android:hint="@string/note_title"
-                    android:text="@{note.noteTitle}"
                     android:imeOptions="actionDone"
                     android:importantForAutofill="no"
                     android:includeFontPadding="false"
                     android:inputType="text"
+                    android:text="@{note.noteTitle}"
                     android:textColor="@color/colorTextDark"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ic_back" />
+
                 <TextView
                     android:id="@+id/tv_date_time"
                     android:layout_width="0dp"
@@ -111,7 +118,6 @@
                     android:layout_marginVertical="15dp"
                     android:background="@null"
                     android:gravity="top"
-                    android:text="@{note.noteDetails}"
                     android:hint="@string/type_note_here"
                     android:importantForAutofill="no"
                     android:includeFontPadding="false"

@@ -10,8 +10,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.tanimul.notes.R
-import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.LayoutNoteBinding
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.databinding.ItemNoteBinding
 
 
 class NoteAdapter(
@@ -23,14 +23,14 @@ class NoteAdapter(
         private const val TAG = "NoteAdapter"
     }
 
-    inner class NoteViewHolder(val binding: LayoutNoteBinding) :
+    inner class NoteViewHolder(val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.layout_note,
+                R.layout.item_note,
                 parent,
                 false
             )

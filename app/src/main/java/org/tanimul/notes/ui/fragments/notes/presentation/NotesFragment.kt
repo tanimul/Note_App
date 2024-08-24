@@ -1,4 +1,4 @@
-package org.tanimul.notes.ui.fragments
+package org.tanimul.notes.ui.fragments.notes.presentation
 
 import android.app.AlertDialog
 import android.graphics.Canvas
@@ -6,7 +6,6 @@ import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -29,44 +28,45 @@ import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.adapter.NoteAdapter
 import org.tanimul.notes.base.BaseFragment
-import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.FragmentHomeBinding
-import org.tanimul.notes.viewmodel.NoteViewModel
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.databinding.FragmentNotesBinding
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+class NotesFragment : BaseFragment<FragmentNotesBinding>() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val notesViewModel: NotesViewModel by viewModels()
     private lateinit var notes: ArrayList<NoteModel>
-    private lateinit var noteAdapter: NoteAdapter
+   // private lateinit var noteAdapter: NoteAdapter
 
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ): FragmentHomeBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_home, container, false
+    ): FragmentNotesBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_notes, container, false
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun init() {
         notes = ArrayList<NoteModel>()
 
-        noteAdapter = NoteAdapter(notes, notes) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInputFragment(it))
-        }
+        binding.viewModel=notesViewModel
+
+       /* noteAdapter = NoteAdapter(notes, notes) {
+            findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToInputFragment(it))
+        }*/
 
 
         //recyclerView
         binding.rvNoteList.layoutManager =
             StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-        binding.rvNoteList.adapter = noteAdapter
+       // binding.rvNoteList.adapter = noteAdapter
 
         showNotes()
 
         //go to the Input Activity
         binding.fabInput.setOnClickListener {
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToInputFragment(
+                NotesFragmentDirections.actionNotesFragmentToInputFragment(
                     null
                 )
             )
@@ -106,12 +106,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun showNotes() {
         lifecycleScope.launch {
-            noteViewModel.showAllNotes.collectLatest {
-                notes.clear()
-                notes.addAll(it)
-                binding.emptyLayout.root.isVisible = it.isEmpty()
-                binding.etSearch.isVisible = it.isNotEmpty()
-                noteAdapter.notifyDataSetChanged()
+            notesViewModel.fetchNotes.collectLatest {
+                it?.let {
+                    notes.clear()
+                    notes.addAll(it)
+                    binding.emptyLayout.root.isVisible = it.isEmpty()
+                    binding.etSearch.isVisible = it.isNotEmpty()
+                    //noteAdapter.notifyDataSetChanged()
+                }
+
             }
         }
     }
@@ -150,7 +153,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             .setMessage("Are you sure you want to delete Tasks?")
             .setPositiveButton(
                 "OK"
-            ) { _, _ -> noteViewModel.deleteAllNotes() }
+            ) { _, _ -> notesViewModel.deleteNotes() }
             .setNegativeButton(
                 "CANCEL"
             ) { dialog, _ -> dialog.dismiss() }
@@ -173,7 +176,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                noteViewModel.deleteSingleNote(notes[viewHolder.adapterPosition])
+                notesViewModel.deleteNote(notes[viewHolder.adapterPosition])
                 ///noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

@@ -1,10 +1,11 @@
-package org.tanimul.notes.data.database
+package org.tanimul.notes.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.tanimul.notes.data.model.NoteModel
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.db.dao.NoteDao
 
 @Database(entities = [NoteModel::class], version = 3, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {

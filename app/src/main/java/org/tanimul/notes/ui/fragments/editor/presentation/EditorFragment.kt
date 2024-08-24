@@ -1,4 +1,4 @@
-package org.tanimul.notes.ui.fragments
+package org.tanimul.notes.ui.fragments.editor.presentation
 
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -11,22 +11,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.base.BaseFragment
-import org.tanimul.notes.data.model.NoteModel
-import org.tanimul.notes.databinding.FragmentInputBinding
-import org.tanimul.notes.utils.toast
-import org.tanimul.notes.viewmodel.NoteViewModel
+import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.common.extentions.toast
+import org.tanimul.notes.databinding.FragmentEditorBinding
 
 @AndroidEntryPoint
-class InputFragment : BaseFragment<FragmentInputBinding>() {
+class EditorFragment : BaseFragment<FragmentEditorBinding>() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
-    private val args: InputFragmentArgs by navArgs()
+    private val editorViewModel: EditorViewModel by viewModels()
+    private val args: EditorFragmentArgs by navArgs()
 
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
@@ -35,24 +37,32 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ): FragmentInputBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_input, container, false
+    ): FragmentEditorBinding = DataBindingUtil.inflate(
+        layoutInflater, R.layout.fragment_editor, container, false
     )
 
     override fun init() {
 
-        binding.note = args.noteModel
+        binding.apply {
+            note = args.noteModel
+            viewModel = editorViewModel
+        }
 
         args.noteModel?.let { priorityCode = it.importance }
 
         initMiscellaneous()
 
-        binding.ivSaveNote.setOnClickListener {
-            saveNote()
-        }
-
-        binding.icBack.setOnClickListener {
-            saveNote()
+        lifecycleScope.launch {
+            launch {
+                editorViewModel.uiAction.collectLatest {
+                    when (it) {
+                        is InputUiActions.AddNote -> saveNote()
+                        is InputUiActions.DeleteNote -> {}
+                        is InputUiActions.NavigateBack -> saveNote()
+                        is InputUiActions.UpdateNote -> saveNote()
+                    }
+                }
+            }
         }
     }
 
@@ -69,9 +79,9 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
             )
             if (args.noteModel != null) {
                 noteModel.id = args.noteModel!!.id
-                noteViewModel.updateExistingNote(noteModel)
+                editorViewModel.updateNote(noteModel)
             } else {
-                noteViewModel.addSingleNote(noteModel)
+                editorViewModel.addNote(noteModel)
             }
 
 
@@ -161,7 +171,7 @@ class InputFragment : BaseFragment<FragmentInputBinding>() {
                 dialogDeleteNote!!.window!!.setBackgroundDrawable(ColorDrawable(0))
             }
             view.findViewById<View>(R.id.textDeleteNote).setOnClickListener {
-                args.noteModel?.let { it1 -> noteViewModel.deleteSingleNote(it1) }
+                // args.noteModel?.let { it1 -> noteViewModel.deleteSingleNote(it1) }
                 dialogDeleteNote!!.dismiss()
                 activity?.toast("Note deleted successfully")
                 findNavController().popBackStack()
