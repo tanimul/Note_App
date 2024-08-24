@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import org.tanimul.notes.ui.dialogs.LoadingDialog
 
-abstract class BaseFragment<E : ViewBinding> constructor() : Fragment() {
+abstract class BaseFragment<E : ViewBinding> : Fragment() {
 
     private var _binding: E? = null
     private var mContext: Context? = null

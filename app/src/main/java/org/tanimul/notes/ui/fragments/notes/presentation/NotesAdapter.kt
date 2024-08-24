@@ -6,54 +6,52 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.tanimul.notes.common.domain.model.NoteModel
 import org.tanimul.notes.databinding.ItemNoteBinding
+import timber.log.Timber
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class NotesAdapter() :
-    ListAdapter<NoteModel, NotesAdapter.ContentViewHolder>(DiffCallBack()) {
-    class ContentViewHolder(val binding: ItemNoteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+class NotesAdapter(val viewModel: NotesViewModel) :
+    ListAdapter<NoteModel, NotesAdapter.NotesViewHolder>(DiffCallBack()) {
+    class NotesViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun onBind(data: NoteModel) {
-            binding.note = data
+        fun onBind(data: NoteModel, notesViewModel: NotesViewModel) {
+            binding.apply {
+                note = data
+                viewModel = notesViewModel
+            }
         }
-
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): ContentViewHolder {
-        return ContentViewHolder(
+    ): NotesViewHolder {
+        return NotesViewHolder(
             ItemNoteBinding.inflate(
                 LayoutInflater.from(parent.context)
             )
         )
     }
 
-    override fun onBindViewHolder(holder: ContentViewHolder, position: Int) {
-        holder.onBind(getItem(position))
+    override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
+        holder.onBind(getItem(position), viewModel)
     }
-
 
     private class DiffCallBack : DiffUtil.ItemCallback<NoteModel>() {
         override fun areItemsTheSame(oldItem: NoteModel, newItem: NoteModel): Boolean =
             oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: NoteModel, newItem: NoteModel): Boolean =
-            oldItem.id == newItem.id
+            oldItem == newItem
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
-@BindingAdapter(value = ["bindNote"], requireAll = true)
-fun RecyclerView.bindContent(
-    data: List<NoteModel>?
+@BindingAdapter(value = ["bindNotes", "bindViewModel"], requireAll = true)
+fun RecyclerView.bindNotes(
+    data: List<NoteModel>?, viewModel: NotesViewModel
 ) {
-    if (adapter == null) adapter = NotesAdapter()
+    Timber.d("onBind: $data")
+    if (adapter == null) adapter = NotesAdapter(viewModel)
     val value = data ?: emptyList()
     val adapter = adapter as? NotesAdapter
     adapter?.submitList(value)
-
 }
