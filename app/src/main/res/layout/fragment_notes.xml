@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="org.tanimul.notes.ui.fragments.notes.presentation.NotesViewModel" />
 
         <import type="org.tanimul.notes.ui.fragments.notes.presentation.NotesUiActions" />
 
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,6 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{()->viewModel.uiAction(NotesUiActions.ShowMenu.INSTANCE)}"
             android:src="@drawable/ic_menu"
             app:layout_constraintBottom_toBottomOf="@+id/et_search"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,20 +54,23 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_noteList"
+            bindNotes="@{viewModel.displayNotes}"
+            bindViewModel="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_search"
             app:spanCount="2"
-            bindNotes="@{viewModel.displayNotes}"
-            bindViewModel="@{viewModel}"
             tools:listitem="@layout/item_note" />
 
         <include
             android:id="@+id/empty_layout"
             layout="@layout/layout_empty"
-            android:visibility="gone" />
+            android:visibility="@{viewModel.displayNotes.size() == 0 ? View.VISIBLE : View.GONE, default=gone}"
+            tools:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_input"
@@ -71,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="28dp"
             android:layout_marginBottom="32dp"
+            android:onClick="@{()->viewModel.uiAction(NotesUiActions.NavigateEditorScreen.INSTANCE)}"
             app:backgroundTint="@color/white"
             app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
