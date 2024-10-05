@@ -3,19 +3,15 @@ package org.tanimul.notes.ui.fragments.notes.presentation
 import android.app.AlertDialog
 import android.graphics.Canvas
 import android.os.Build
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.View
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,74 +22,56 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.tanimul.notes.R
-import org.tanimul.notes.adapter.NoteAdapter
 import org.tanimul.notes.base.BaseFragment
-import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.common.extentions.launchAndRepeatWithViewLifecycle
+import org.tanimul.notes.common.extentions.toast
 import org.tanimul.notes.databinding.FragmentNotesBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
-class NotesFragment : BaseFragment<FragmentNotesBinding>() {
+class NotesFragment : BaseFragment<FragmentNotesBinding>(R.layout.fragment_notes) {
 
     private val notesViewModel: NotesViewModel by viewModels()
-    private lateinit var notes: ArrayList<NoteModel>
-   // private lateinit var noteAdapter: NoteAdapter
-
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-    ): FragmentNotesBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_notes, container, false
-    )
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    override fun init() {
-        notes = ArrayList<NoteModel>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mBinding.viewModel = notesViewModel
 
-        binding.viewModel=notesViewModel
+        launchAndRepeatWithViewLifecycle {
+            launch {
+                notesViewModel.uiAction.collectLatest {
+                    when (it) {
+                        is NotesUiActions.NavigateBack -> {}
+                        is NotesUiActions.NavigateEditorScreen -> {
+                            findNavController().navigate(
+                                NotesFragmentDirections.actionNotesFragmentToInputFragment(
+                                    null
+                                )
+                            )
+                        }
 
-       /* noteAdapter = NoteAdapter(notes, notes) {
-            findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToInputFragment(it))
-        }*/
+                        is NotesUiActions.ShowMenu -> {
+                            showMenu()
+                        }
 
-
-        //recyclerView
-        binding.rvNoteList.layoutManager =
-            StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-       // binding.rvNoteList.adapter = noteAdapter
-
-        showNotes()
-
-        //go to the Input Activity
-        binding.fabInput.setOnClickListener {
-            findNavController().navigate(
-                NotesFragmentDirections.actionNotesFragmentToInputFragment(
-                    null
-                )
-            )
-        }
-
-        binding.ibDropdownMenu.setOnClickListener {
-            val popup = PopupMenu(requireContext(), it)
-            val inflater: MenuInflater = popup.menuInflater
-            inflater.inflate(R.menu.top_menu, popup.menu)
-
-            popup.menu.findItem(R.id.menu_gridView)?.isVisible =
-                binding.rvNoteList.layoutManager is LinearLayoutManager
-            popup.menu.findItem(R.id.menu_listView)?.isVisible =
-                binding.rvNoteList.layoutManager is StaggeredGridLayoutManager
-            popup.setForceShowIcon(true)
-
-            popup.setOnMenuItemClickListener { item ->
-                onOptionsItemSelected(item)
+                        is NotesUiActions.SelectedNote -> {
+                            findNavController().navigate(
+                                NotesFragmentDirections.actionNotesFragmentToInputFragment(
+                                    it.note
+                                )
+                            )
+                        }
+                    }
+                }
             }
-            popup.show()
         }
 
 
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
+        mBinding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //Log.d(HomeActivity.TAG, "onQueryTextChange: $s")
-                ///noteAdapter.filter.filter(s)
+                Timber.d("onQueryTextChange: $s")
+                notesViewModel.searchNotes("$s")
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -104,31 +82,14 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
         deleteForSwipe()
     }
 
-    private fun showNotes() {
-        lifecycleScope.launch {
-            notesViewModel.fetchNotes.collectLatest {
-                it?.let {
-                    notes.clear()
-                    notes.addAll(it)
-                    binding.emptyLayout.root.isVisible = it.isEmpty()
-                    binding.etSearch.isVisible = it.isNotEmpty()
-                    //noteAdapter.notifyDataSetChanged()
-                }
-
-            }
-        }
-    }
-
-    //  }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        //   Log.d(HomeActivity.TAG, "onOptionsItemSelected: " + item.itemId)
         when (item.itemId) {
             R.id.menu_listView -> {
-                binding.rvNoteList.layoutManager = LinearLayoutManager(requireContext())
+                mBinding.rvNoteList.layoutManager = LinearLayoutManager(requireContext())
             }
 
             R.id.menu_gridView -> {
-                binding.rvNoteList.layoutManager =
+                mBinding.rvNoteList.layoutManager =
                     StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
             }
 
@@ -147,15 +108,36 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
         return super.onOptionsItemSelected(item)
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun showMenu() {   // Create and configure the PopupMenu
+        val popup = PopupMenu(requireContext(), mBinding.ibDropdownMenu).apply {
+            menuInflater.inflate(R.menu.top_menu, menu)
+
+            // Set item visibility based on LayoutManager type
+            menu.findItem(R.id.menu_gridView).isVisible =
+                mBinding.rvNoteList.layoutManager is LinearLayoutManager
+            menu.findItem(R.id.menu_listView).isVisible =
+                mBinding.rvNoteList.layoutManager is StaggeredGridLayoutManager
+
+            setForceShowIcon(true)
+
+            // Set the click listener for menu items
+            setOnMenuItemClickListener { item -> onOptionsItemSelected(item) }
+        }
+
+        // Show the PopupMenu
+        popup.show()
+    }
+
     private fun deleteAll() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete All")
-            .setMessage("Are you sure you want to delete Tasks?")
+            .setTitle(getString(R.string.delete_all))
+            .setMessage(getString(R.string.are_you_sure_you_want_to_delete_tasks))
             .setPositiveButton(
-                "OK"
+                getString(R.string.ok)
             ) { _, _ -> notesViewModel.deleteNotes() }
             .setNegativeButton(
-                "CANCEL"
+                getString(R.string.cancel)
             ) { dialog, _ -> dialog.dismiss() }
             .show()
 
@@ -176,8 +158,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                notesViewModel.deleteNote(notes[viewHolder.adapterPosition])
-                ///noteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                notesViewModel.deleteNote(viewHolder.adapterPosition)
             }
 
             override fun onChildDraw(
@@ -215,9 +196,9 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>() {
                     dY,
                     actionState,
                     isCurrentlyActive
-                );
+                )
             }
-        }).attachToRecyclerView(binding.rvNoteList)
+        }).attachToRecyclerView(mBinding.rvNoteList)
     }
 
 }
