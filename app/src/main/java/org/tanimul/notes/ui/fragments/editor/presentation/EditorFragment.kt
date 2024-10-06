@@ -1,6 +1,7 @@
 package org.tanimul.notes.ui.fragments.editor.presentation
 
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,11 +21,12 @@ import kotlinx.coroutines.launch
 import org.tanimul.notes.R
 import org.tanimul.notes.base.BaseFragment
 import org.tanimul.notes.common.domain.model.NoteModel
+import org.tanimul.notes.common.extentions.launchAndRepeatWithViewLifecycle
 import org.tanimul.notes.common.extentions.toast
 import org.tanimul.notes.databinding.FragmentEditorBinding
 
 @AndroidEntryPoint
-class EditorFragment : BaseFragment<FragmentEditorBinding>() {
+class EditorFragment : BaseFragment<FragmentEditorBinding>(R.layout.fragment_editor) {
 
     private val editorViewModel: EditorViewModel by viewModels()
     private val args: EditorFragmentArgs by navArgs()
@@ -33,17 +34,9 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
     private var priorityCode = 0
     private var dialogDeleteNote: AlertDialog? = null
 
-
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-    ): FragmentEditorBinding = DataBindingUtil.inflate(
-        layoutInflater, R.layout.fragment_editor, container, false
-    )
-
-    override fun init() {
-
-        binding.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mBinding.apply {
             note = args.noteModel
             viewModel = editorViewModel
         }
@@ -52,7 +45,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
 
         initMiscellaneous()
 
-        lifecycleScope.launch {
+        launchAndRepeatWithViewLifecycle {
             launch {
                 editorViewModel.uiAction.collectLatest {
                     when (it) {
@@ -67,13 +60,13 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
     }
 
     private fun saveNote() {
-        if (binding.etTitle.text.toString().isNotEmpty() || binding.etDescription.text.toString()
+        if (mBinding.etTitle.text.toString().isNotEmpty() || mBinding.etDescription.text.toString()
                 .isNotEmpty()
         ) {
 
             val noteModel = NoteModel(
-                noteTitle = binding.etTitle.text.toString(),
-                noteDetails = binding.etDescription.text.toString(),
+                noteTitle = mBinding.etTitle.text.toString(),
+                noteDetails = mBinding.etDescription.text.toString(),
                 updatedAt = System.currentTimeMillis(),
                 importance = priorityCode
             )
@@ -89,10 +82,9 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
         findNavController().popBackStack()
     }
 
-
     private fun initMiscellaneous() {
         val bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-        val miscellaneous: LinearLayout = binding.layoutMiscellaneous.root
+        val miscellaneous: LinearLayout = mBinding.layoutMiscellaneous.root
         bottomSheetBehavior = BottomSheetBehavior.from(miscellaneous)
         miscellaneous.setOnClickListener {
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -108,19 +100,19 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
         when (priorityCode) {
             0 -> {
                 imageColor1.setImageResource(R.drawable.done_vector)
-                binding.rootLayout.setBackgroundResource(R.color.colorBackground1)
+                mBinding.rootLayout.setBackgroundResource(R.color.colorBackground1)
                 setStatusBarColor(R.color.colorBackground1)
             }
 
             1 -> {
                 imageColor2.setImageResource(R.drawable.done_vector)
-                binding.rootLayout.setBackgroundResource(R.color.colorBackground2)
+                mBinding.rootLayout.setBackgroundResource(R.color.colorBackground2)
                 setStatusBarColor(R.color.colorBackground2)
             }
 
             2 -> {
                 imageColor3.setImageResource(R.drawable.done_vector)
-                binding.rootLayout.setBackgroundResource(R.color.colorBackground3)
+                mBinding.rootLayout.setBackgroundResource(R.color.colorBackground3)
                 setStatusBarColor(R.color.colorBackground3)
             }
         }
@@ -130,7 +122,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
             imageColor1.setImageResource(R.drawable.done_vector)
             imageColor2.setImageResource(0)
             imageColor3.setImageResource(0)
-            binding.rootLayout.setBackgroundResource(R.color.colorBackground1)
+            mBinding.rootLayout.setBackgroundResource(R.color.colorBackground1)
             setStatusBarColor(R.color.colorBackground1)
         }
         miscellaneous.findViewById<View>(R.id.imageColor2).setOnClickListener {
@@ -138,7 +130,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
             imageColor1.setImageResource(0)
             imageColor2.setImageResource(R.drawable.done_vector)
             imageColor3.setImageResource(0)
-            binding.rootLayout.setBackgroundResource(R.color.colorBackground2)
+            mBinding.rootLayout.setBackgroundResource(R.color.colorBackground2)
             setStatusBarColor(R.color.colorBackground2)
         }
         miscellaneous.findViewById<View>(R.id.imageColor3).setOnClickListener {
@@ -146,7 +138,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
             imageColor1.setImageResource(0)
             imageColor2.setImageResource(0)
             imageColor3.setImageResource(R.drawable.done_vector)
-            binding.rootLayout.setBackgroundResource(R.color.colorBackground3)
+            mBinding.rootLayout.setBackgroundResource(R.color.colorBackground3)
             setStatusBarColor(R.color.colorBackground3)
         }
 
@@ -171,7 +163,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
                 dialogDeleteNote!!.window!!.setBackgroundDrawable(ColorDrawable(0))
             }
             view.findViewById<View>(R.id.textDeleteNote).setOnClickListener {
-                // args.noteModel?.let { it1 -> noteViewModel.deleteSingleNote(it1) }
+                 args.noteModel?.let { it1 -> editorViewModel.deleteNote(it1) }
                 dialogDeleteNote!!.dismiss()
                 activity?.toast("Note deleted successfully")
                 findNavController().popBackStack()
@@ -180,14 +172,6 @@ class EditorFragment : BaseFragment<FragmentEditorBinding>() {
                 .setOnClickListener { dialogDeleteNote!!.dismiss() }
         }
         dialogDeleteNote!!.show()
-    }
-
-    private fun setStatusBarColor(colorCode: Int) {
-        activity?.window?.apply {
-            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = ContextCompat.getColor(requireContext(), colorCode)
-        }
     }
 
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -45,9 +46,10 @@ class NotesViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fetchNotes.collect {
+            fetchNotes.collectLatest {
                 Timber.d("fetchNotes: $it")
                 it?.let {
+                    Timber.d(":: $it")
                     _originalNotes.value = it
                     _displayNotes.value = it
                 }
@@ -60,12 +62,21 @@ class NotesViewModel @Inject constructor(
         _fetchNotes.trySend(Unit)
     }
 
-    fun deleteNote(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
-        deleteNoteUseCase(note)
+    fun deleteNote(position: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val note = _displayNotes.value?.getOrNull(position)
+        note?.let {
+            deleteNoteUseCase(it)
+        }
     }
 
     fun deleteNotes() = viewModelScope.launch(Dispatchers.IO) {
         deleteNotesUseCase()
+    }
+
+    fun searchNotes(notes: String) {
+        _displayNotes.value = _originalNotes.value?.filter {
+            it.noteTitle.uppercase().contains(notes.uppercase())
+        }
     }
 
 
@@ -75,9 +86,21 @@ class NotesViewModel @Inject constructor(
         _uiAction.trySend(action)
     }
 
+    fun selectedNote(note: NoteModel) {
+        uiAction(
+            NotesUiActions.SelectedNote(
+                note
+            )
+        )
+    }
+
 }
 
 sealed interface NotesUiActions {
     data object NavigateBack : NotesUiActions
+    data object NavigateEditorScreen : NotesUiActions
+    data object ShowMenu : NotesUiActions
+
+    data class SelectedNote(val note: NoteModel) : NotesUiActions
 }
 

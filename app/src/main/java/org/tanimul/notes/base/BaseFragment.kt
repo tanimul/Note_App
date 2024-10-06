@@ -1,48 +1,50 @@
 package org.tanimul.notes.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
+import org.tanimul.notes.R
+import org.tanimul.notes.common.autoCleared
 import org.tanimul.notes.ui.dialogs.LoadingDialog
 
-abstract class BaseFragment<E : ViewBinding> : Fragment() {
+abstract class BaseFragment<T : ViewDataBinding> constructor(@LayoutRes private val mContentLayoutId: Int) :
+    Fragment() {
 
-    private var _binding: E? = null
-    private var mContext: Context? = null
-
+    var mBinding by autoCleared<T>()
     private var loadingDialog: LoadingDialog? = null
 
-    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): E
-    protected abstract fun init()
+    var mToolbar: Toolbar? = null
+        private set
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        _binding = getViewBinding(inflater, container)
-        return _binding?.root
+        mBinding = DataBindingUtil.inflate(inflater, mContentLayoutId, container, false)
+        mBinding.lifecycleOwner = viewLifecycleOwner
+        mBinding.root.filterTouchesWhenObscured = true
+
+        // Default background color for status bar, can be overridden
+        setStatusBarColor(R.color.colorBackground)
+        return mBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loadingDialog?.dismiss() // Dismiss loading dialog if exists
+        mToolbar = null
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }
-
-    val binding: E
-        get() = _binding!!
 
     fun initLoadingDialog() {
-        loadingDialog = LoadingDialog(mContext)
+        loadingDialog = LoadingDialog(requireContext())
     }
 
     fun showLoadingDialog() {
@@ -52,5 +54,15 @@ abstract class BaseFragment<E : ViewBinding> : Fragment() {
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }
-}
 
+    protected open val resToolbarId: Int = 0
+    protected open val haveToolbar: Boolean = false
+
+    fun setStatusBarColor(colorCode: Int) {
+        activity?.window?.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = ContextCompat.getColor(requireContext(), colorCode)
+        }
+    }
+}
