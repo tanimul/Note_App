@@ -8,6 +8,7 @@ import android.view.WindowManager
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -31,7 +32,7 @@ abstract class BaseFragment<T : ViewDataBinding> constructor(@LayoutRes private 
         mBinding = DataBindingUtil.inflate(inflater, mContentLayoutId, container, false)
         mBinding.lifecycleOwner = viewLifecycleOwner
         mBinding.root.filterTouchesWhenObscured = true
-
+        ViewCompat.setFitsSystemWindows(mBinding.root, true)
         // Default background color for status bar, can be overridden
         setStatusBarColor(R.color.colorBackground)
         return mBinding.root
